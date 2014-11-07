@@ -21,6 +21,8 @@ namespace WPF_AIPStressTesting01
   /// </summary>
   public partial class MainWindow : Window
   {
+    public const int _MACHINE_QUANTITY_MAX_ = 100;
+
     public MainWindow()
     {
       InitializeComponent();
@@ -41,8 +43,8 @@ namespace WPF_AIPStressTesting01
         value--;
 
       if (value < 1)
-        value = 100;
-      else if (value > 100)
+        value = _MACHINE_QUANTITY_MAX_;
+      else if (value > _MACHINE_QUANTITY_MAX_)
         value = 1;
 
       txtBox.Text = value.ToString();
@@ -69,18 +71,21 @@ namespace WPF_AIPStressTesting01
       if (String.IsNullOrEmpty(txtBox.Text))
         return;
 
-      int i;
-      int value = String.IsNullOrEmpty(txtBox.Text) || !int.TryParse(txtBox.Text, out i) ? 0 : Convert.ToInt32(txtBox.Text);
+      int i, value;
+      if (!int.TryParse(txtBox.Text, out i))
+        value = _MACHINE_QUANTITY_MAX_ + 1;
+      else
+        value = i;
 
       if (value == 0)
         return;
-      
-      if (value < 1 || value > 100)
+
+      if (value < 1 || value > _MACHINE_QUANTITY_MAX_)
       {
         if (value < 1)
           value = 1;
-        else if (value > 100)
-          value = 100;
+        else if (value > _MACHINE_QUANTITY_MAX_)
+          value = _MACHINE_QUANTITY_MAX_;
         txtBox.Text = value.ToString();
       }
     }

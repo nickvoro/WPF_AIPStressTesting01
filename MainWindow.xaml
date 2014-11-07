@@ -5,7 +5,7 @@
         Title="MainWindow" Height="350" Width="525">
     <Grid ShowGridLines="False">
         <TextBlock Height="22" HorizontalAlignment="Left" Margin="12,16,0,0" Name="textMachineQuantity" Text="Machine Quantity" VerticalAlignment="Top" />
-        <xctk:ButtonSpinner Spin="ButtonSpinner_Spin" Margin="103,12,347,277" Height="22" HorizontalAlignment="Left" VerticalAlignment="Top" KeyDown="ButtonSpinner_KeyDown" KeyUp="ButtonSpinner_KeyUp">
+        <xctk:ButtonSpinner Spin="ButtonSpinner_Spin" Margin="103,12,0,0" Height="22" HorizontalAlignment="Left" VerticalAlignment="Top" KeyDown="ButtonSpinner_KeyDown" KeyUp="ButtonSpinner_KeyUp">
             <TextBox Text="1" IsReadOnly="False" HorizontalContentAlignment="Right" VerticalAlignment="Top" VerticalContentAlignment="Center" />
         </xctk:ButtonSpinner>
     </Grid>
