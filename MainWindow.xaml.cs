@@ -21,19 +21,20 @@ namespace WPF_AIPStressTesting01
   /// </summary>
   public partial class MainWindow : Window
   {
-    public const int _MACHINE_QUANTITY_MAX_ = 100;
+    public const int MachineQuantityMax = 100;
+    public const int TimeScaleFactorMax = 100;
 
     public MainWindow()
     {
       InitializeComponent();
     }
 
-    // ButtonSpinner
+    // ButtonSpinner SpinnerMachineQuantity
 
-    private void ButtonSpinner_Spin(object sender, SpinEventArgs e)
+    private void SpinnerMachineQuantity_Spin(object sender, SpinEventArgs e)
     {
-      ButtonSpinner spinner = (ButtonSpinner)sender;
-      TextBox txtBox = (TextBox)spinner.Content;
+      var spinner = (ButtonSpinner)sender;
+      var txtBox = (TextBox)spinner.Content;
       int i;
       int value = String.IsNullOrEmpty(txtBox.Text) || !int.TryParse(txtBox.Text, out i) ? 0 : Convert.ToInt32(txtBox.Text);
       
@@ -43,49 +44,116 @@ namespace WPF_AIPStressTesting01
         value--;
 
       if (value < 1)
-        value = _MACHINE_QUANTITY_MAX_;
-      else if (value > _MACHINE_QUANTITY_MAX_)
+        value = MachineQuantityMax;
+      else if (value > MachineQuantityMax)
         value = 1;
 
       txtBox.Text = value.ToString();
     }
 
-    private void ButtonSpinner_KeyDown(object sender, KeyEventArgs e)
+    private void SpinnerMachineQuantity_KeyDown(object sender, KeyEventArgs e)
     {
+      const string rStr = "^(D|NumPad)[0-9]$";
+
       if (e.Key == Key.Tab)
       {
         return;
       }
       
       var key = e.Key.ToString();
-      var rStr = "^(D|NumPad)[0-9]$";
       var r = new Regex(rStr, RegexOptions.IgnoreCase);
       e.Handled = !r.IsMatch(key);
     }
 
-    private void ButtonSpinner_KeyUp(object sender, KeyEventArgs e)
+    private void SpinnerMachineQuantity_KeyUp(object sender, KeyEventArgs e)
     {
-      ButtonSpinner spinner = (ButtonSpinner)sender;
-      TextBox txtBox = (TextBox)spinner.Content;
+      var spinner = (ButtonSpinner)sender;
+      var txtBox = (TextBox)spinner.Content;
 
       if (String.IsNullOrEmpty(txtBox.Text))
         return;
 
-      int i, value;
-      if (!int.TryParse(txtBox.Text, out i))
-        value = _MACHINE_QUANTITY_MAX_ + 1;
-      else
-        value = i;
+      int i;
+      var value = !int.TryParse(txtBox.Text, out i) ? MachineQuantityMax : i;
 
       if (value == 0)
         return;
 
-      if (value < 1 || value > _MACHINE_QUANTITY_MAX_)
+      if (value < 1 || value > MachineQuantityMax)
       {
         if (value < 1)
           value = 1;
-        else if (value > _MACHINE_QUANTITY_MAX_)
-          value = _MACHINE_QUANTITY_MAX_;
+        else if (value > MachineQuantityMax)
+          value = MachineQuantityMax;
+        txtBox.Text = value.ToString();
+      }
+    }
+
+    // ButtonSpinner SpinnerTimeScaleFactor
+
+    private void SpinnerTimeScaleFactor_Spin(object sender, SpinEventArgs e)
+    {
+      var spinner = (ButtonSpinner)sender;
+      var txtBox = (TextBox)spinner.Content;
+      double d  ;
+      var value = String.IsNullOrEmpty(txtBox.Text) || !double.TryParse(txtBox.Text, out d) ? 0 : Convert.ToDouble(txtBox.Text);
+
+      if (e.Direction == SpinDirection.Increase)
+      {
+        if (value > .09 && value < .1)
+          value = .09;
+        value += value < .1 ? .01 : .1;
+      }
+      else
+      {
+        value -= value <= .1 ? .01 : .1;
+      }
+
+      if (value <= 0)
+        value = .1;
+      else if (value > TimeScaleFactorMax)
+        value = TimeScaleFactorMax;
+
+      txtBox.Text = value.ToString();
+    }
+
+    private void SpinnerTimeScaleFactor_KeyDown(object sender, KeyEventArgs e)
+    {
+      const string rStr = "^((D|NumPad)[0-9]|OemPeriod|Decimal)$";
+
+      var spinner = (ButtonSpinner)sender;
+      var txtBox = (TextBox)spinner.Content;
+
+      if (e.Key == Key.Tab)
+      {
+        return;
+      }
+
+      var key = e.Key.ToString();
+      var r = new Regex(rStr, RegexOptions.IgnoreCase);
+      e.Handled = !r.IsMatch(key) || ((key == "OemPeriod" || key == "Decimal") && txtBox.Text.Contains("."));
+    }
+
+    private void SpinnerTimeScaleFactor_KeyUp(object sender, KeyEventArgs e)
+    {
+      var spinner = (ButtonSpinner)sender;
+      var txtBox = (TextBox)spinner.Content;
+
+      if (String.IsNullOrEmpty(txtBox.Text))
+        return;
+
+      double d;
+      var value = !double.TryParse(txtBox.Text, out d) ? TimeScaleFactorMax : d;
+
+      if (value == 0)
+        return;
+
+      if (value <= 0 || value > TimeScaleFactorMax)
+      {
+        if (value <= 0)
+          value = .1;
+        else if (value > TimeScaleFactorMax)
+          value = TimeScaleFactorMax;
         txtBox.Text = value.ToString();
       }
     }

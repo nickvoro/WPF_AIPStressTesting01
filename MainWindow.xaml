@@ -26,14 +26,13 @@
                    Name="TextMachineQuantity"
                    Text="Machine Quantity"
                    VerticalAlignment="Center" />
-        <xctk:ButtonSpinner Grid.Column="1"
-                            Spin="ButtonSpinner_Spin"
-                            Margin="5"
+        <xctk:ButtonSpinner Grid.Column="1" Margin="5"
                             Height="22"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
-                            KeyDown="ButtonSpinner_KeyDown"
-                            KeyUp="ButtonSpinner_KeyUp"
+                            KeyDown="SpinnerMachineQuantity_KeyDown"
+                            KeyUp="SpinnerMachineQuantity_KeyUp"
+                            Spin="SpinnerMachineQuantity_Spin"
                             Name="SpinnerMachineQuantity">
             <TextBox Text="1"
                      IsReadOnly="False"
@@ -41,6 +40,24 @@
                      VerticalAlignment="Center"
                      VerticalContentAlignment="Center"
                      Name="TextBoxMachineQuantity" />
+        </xctk:ButtonSpinner>
+        <TextBlock Grid.Row="1"
+                   Margin="5"
+                   HorizontalAlignment="Right"
+                   Name="TextTimeScaleFactor"
+                   Text="Time Scale Factor"
+                   VerticalAlignment="Center" />
+        <xctk:ButtonSpinner Grid.Row="1" Grid.Column="1" Margin="5"
+                            Name="SpinnerTimeScaleFactor"
+                            Height="22"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center" Spin="SpinnerTimeScaleFactor_Spin" KeyDown="SpinnerTimeScaleFactor_KeyDown" KeyUp="SpinnerTimeScaleFactor_KeyUp">
+            <TextBox Text="1"
+                     IsReadOnly="False"
+                     HorizontalContentAlignment="Right"
+                     VerticalAlignment="Center"
+                     VerticalContentAlignment="Center"
+                     Name="TextBoxTimeScaleFactor" />
         </xctk:ButtonSpinner>
     </Grid>
 </Window>
