@@ -2,9 +2,10 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        Title="MainWindow" Height="547" Width="525">
+        Title="MainWindow" Height="Auto" Width="525" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" d:DesignHeight="186" SizeToContent="Height">
     <Grid ShowGridLines="False">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
@@ -109,6 +110,10 @@
                   AlternationCount="2" LoadingRow="DataGridStates_LoadingRow" />
 
             </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Orientation="Vertical" Height="67" Margin="0,0,0,-7" Background="AntiqueWhite">
+            <Button Name="ButtonStart" Content="Start test" Margin="0,5,0,2" Width="100" Background="CornflowerBlue" Click="ButtonStart_Click" />
+            <Button Name="ButtonStop" Content="Stop test" Margin="0" Width="100" Background="Peru" Click="ButtonStop_Click" />
         </StackPanel>
     </Grid>
 </Window>

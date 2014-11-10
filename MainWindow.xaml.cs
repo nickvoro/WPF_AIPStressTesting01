@@ -178,5 +178,15 @@ namespace WPF_AIPStressTesting01
         var rowCnt = e.Row.GetIndex() + 1;
         e.Row.Header = rowCnt.ToString();
     }
+
+    private void ButtonStart_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void ButtonStop_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
   }
 }
