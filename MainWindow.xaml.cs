@@ -28,6 +28,7 @@ namespace WPF_AIPStressTesting01
     {
       InitializeComponent();
       DataGridMachines.ItemsSource = Machine.GetMachines();
+        DataGridStates.ItemsSource = State.GetStates();
     }
 
     // ButtonSpinner SpinnerMachineQuantity
@@ -164,6 +165,13 @@ namespace WPF_AIPStressTesting01
     {
       var rowCnt = e.Row.GetIndex() + 1;
       e.Row.Header = rowCnt.ToString();
+    }
+
+    // DataGridStates
+    private void DataGridStates_LoadingRow(object sender, DataGridRowEventArgs e)
+    {
+        var rowCnt = e.Row.GetIndex() + 1;
+        e.Row.Header = rowCnt.ToString();
     }
   }
 }
