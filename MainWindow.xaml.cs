@@ -99,16 +99,21 @@ namespace WPF_AIPStressTesting01
       var txtBox = (TextBox)spinner.Content;
       double d  ;
       var value = String.IsNullOrEmpty(txtBox.Text) || !double.TryParse(txtBox.Text, out d) ? 0 : Convert.ToDouble(txtBox.Text);
+      double delta ;
 
       if (e.Direction == SpinDirection.Increase)
       {
         if (value > .09 && value < .1)
           value = .09;
-        value += value < .1 ? .01 : .1;
+        else if (value > .9 && value < 1)
+            value = .9;
+        delta = value < .1 ? .01 : (value < 1 ? .1 : 1);
+        value += delta;
       }
       else
       {
-        value -= value <= .1 ? .01 : .1;
+        delta = value <= .1 ? .01 : (value <= 1 ? .1 : 1);
+        value -= delta;
       }
 
       if (value <= 0)
