@@ -27,6 +27,7 @@ namespace WPF_AIPStressTesting01
     public MainWindow()
     {
       InitializeComponent();
+      DataGridMachines.ItemsSource = Machine.GetMachines();
     }
 
     // ButtonSpinner SpinnerMachineQuantity
@@ -156,6 +157,13 @@ namespace WPF_AIPStressTesting01
           value = TimeScaleFactorMax;
         txtBox.Text = value.ToString();
       }
+    }
+
+    // DataGridMachines
+    private void DataGridMachines_LoadingRow(object sender, DataGridRowEventArgs e)
+    {
+      var rowCnt = e.Row.GetIndex() + 1;
+      e.Row.Header = rowCnt.ToString();
     }
   }
 }
