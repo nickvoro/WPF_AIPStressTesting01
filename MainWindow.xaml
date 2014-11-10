@@ -7,57 +7,19 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="3*"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <TextBlock Grid.Row="0"
-                   Margin="5"
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Background="AntiqueWhite">
+            <TextBlock Margin="5"
                    HorizontalAlignment="Right"
-                   Name="TextMachineList"
-                   Text="Machine List"
-                   VerticalAlignment="Top" />
-        <DataGrid Grid.Row="0"
-                  Grid.Column="1"
-                  HorizontalAlignment="Left"
-                  Name="DataGridMachines"
-                  MaxWidth="250"
-                  MaxHeight="150" IsReadOnly="True"
-                  AlternatingRowBackground="LightSteelBlue"
-                  AlternationCount="2" LoadingRow="DataGridMachines_LoadingRow" />
-        <TextBlock Grid.Row="1"
-                   Margin="5"
-                   HorizontalAlignment="Right"
-                   Name="TextMachineCountLabel"
-                   Text="Record's Total"
+                   Name="Tmp2"
+                   Text="Test parameters: "
                    VerticalAlignment="Center" />
-        <TextBlock Grid.Row="1"
-                   Grid.Column="1"
-                   Margin="5"
-                   HorizontalAlignment="Left"
-                   Name="TextMachineCount"
-                   VerticalAlignment="Center"
-                   Text="{Binding Items.Count, ElementName=DataGridMachines}"
-                   />
-        <TextBlock Grid.Row="2"
-                   Grid.Column="0"
-                   Margin="5"
+            <TextBlock Margin="5"
                    HorizontalAlignment="Right"
                    Name="TextMachineQuantity"
-                   Text="Machine Quantity"
+                   Text="Machine quantity"
                    VerticalAlignment="Center" />
-        <xctk:ButtonSpinner Grid.Row="2"
-                            Grid.Column="1"
-                            Margin="5"
+            <xctk:ButtonSpinner Margin="5"
                             Height="22"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
@@ -65,30 +27,56 @@
                             KeyUp="SpinnerMachineQuantity_KeyUp"
                             Spin="SpinnerMachineQuantity_Spin"
                             Name="SpinnerMachineQuantity">
-            <TextBox Text="1"
+                <TextBox Text="1"
                      IsReadOnly="False"
                      HorizontalContentAlignment="Right"
                      VerticalAlignment="Center"
                      VerticalContentAlignment="Center"
                      Name="TextBoxMachineQuantity" />
-        </xctk:ButtonSpinner>
-        <TextBlock Grid.Row="3"
-                   Margin="5"
+            </xctk:ButtonSpinner>
+            <TextBlock Margin="5"
                    HorizontalAlignment="Right"
                    Name="TextTimeScaleFactor"
-                   Text="Time Scale Factor"
+                   Text="Time scale factor"
                    VerticalAlignment="Center" />
-        <xctk:ButtonSpinner Grid.Row="3" Grid.Column="1" Margin="5"
+            <xctk:ButtonSpinner Margin="5"
                             Name="SpinnerTimeScaleFactor"
                             Height="22"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center" Spin="SpinnerTimeScaleFactor_Spin" KeyDown="SpinnerTimeScaleFactor_KeyDown" KeyUp="SpinnerTimeScaleFactor_KeyUp">
-            <TextBox Text="1"
+                <TextBox Text="1"
                      IsReadOnly="False"
                      HorizontalContentAlignment="Right"
                      VerticalAlignment="Center"
                      VerticalContentAlignment="Center"
                      Name="TextBoxTimeScaleFactor" />
-        </xctk:ButtonSpinner>
+            </xctk:ButtonSpinner>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Orientation="Vertical" Background="Beige">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Margin="5"
+                   Name="TextMachineList"
+                   Text="Available machine list" />
+                <TextBlock Margin="5"
+                   HorizontalAlignment="Left"
+                   Name="TextMachineCountLabel"
+                   Text="(total count:" />
+                <TextBlock Grid.Column="1"
+                   Margin="0,5"
+                   HorizontalAlignment="Left"
+                   Name="TextMachineCount"
+                   Text="{Binding Items.Count, ElementName=DataGridMachines}"
+                   />
+                <TextBlock Margin="0,5"
+                   Name="Tmp1"
+                   Text=")" />
+            </StackPanel>
+            <DataGrid Name="DataGridMachines"
+                  MaxWidth="250"
+                  MaxHeight="300" IsReadOnly="True"
+                      HorizontalAlignment="Left"
+                  AlternatingRowBackground="LightSteelBlue"
+                  AlternationCount="2" LoadingRow="DataGridMachines_LoadingRow" />
+        </StackPanel>
     </Grid>
 </Window>
