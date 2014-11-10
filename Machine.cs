@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using WPF_AIPStressTesting01.Annotations;
 
 namespace WPF_AIPStressTesting01
 {
@@ -61,7 +60,6 @@ namespace WPF_AIPStressTesting01
 
     public event PropertyChangedEventHandler PropertyChanged;
 
-    [NotifyPropertyChangedInvocator]
     protected virtual void OnPropertyChanged(string propertyName)
     {
       PropertyChangedEventHandler handler = PropertyChanged;
