@@ -52,7 +52,7 @@
                      Name="TextBoxTimeScaleFactor" />
             </xctk:ButtonSpinner>
         </StackPanel>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Background="Beige">
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Background="PowderBlue">
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Margin="5"
