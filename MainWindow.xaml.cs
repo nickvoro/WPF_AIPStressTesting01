@@ -45,7 +45,7 @@ namespace WPF_AIPStressTesting01
       var txtBox = (TextBox)spinner.Content;
       int i;
       int value = String.IsNullOrEmpty(txtBox.Text) || !int.TryParse(txtBox.Text, out i) ? 0 : Convert.ToInt32(txtBox.Text);
-      
+
       if (e.Direction == SpinDirection.Increase)
         value++;
       else
@@ -67,7 +67,7 @@ namespace WPF_AIPStressTesting01
       {
         return;
       }
-      
+
       var key = e.Key.ToString();
       var r = new Regex(rStr, RegexOptions.IgnoreCase);
       e.Handled = !r.IsMatch(key);
@@ -106,9 +106,9 @@ namespace WPF_AIPStressTesting01
     {
       var spinner = (ButtonSpinner)sender;
       var txtBox = (TextBox)spinner.Content;
-      double d  ;
+      double d;
       var value = String.IsNullOrEmpty(txtBox.Text) || !double.TryParse(txtBox.Text, out d) ? 0 : Convert.ToDouble(txtBox.Text);
-      double delta ;
+      double delta;
 
       if (e.Direction == SpinDirection.Increase)
       {
@@ -117,7 +117,7 @@ namespace WPF_AIPStressTesting01
         else if (value > .09 && value < .1)
           value = .09;
         else if (value > .9 && value < 1)
-            value = .9;
+          value = .9;
         delta = value < .01 ? .001 : (value < .1 ? .01 : (value < 1 ? .1 : 1));
         value += delta;
       }
@@ -189,8 +189,8 @@ namespace WPF_AIPStressTesting01
     // DataGridStates
     private void DataGridStates_LoadingRow(object sender, DataGridRowEventArgs e)
     {
-        var rowCnt = e.Row.GetIndex() + 1;
-        e.Row.Header = rowCnt.ToString();
+      var rowCnt = e.Row.GetIndex() + 1;
+      e.Row.Header = rowCnt.ToString();
     }
 
     private void ButtonStart_Click(object sender, RoutedEventArgs e)
@@ -252,16 +252,55 @@ namespace WPF_AIPStressTesting01
       return value;
     }
 
+    private volatile ItemCollection machineItemCollection;
+    private volatile ItemCollection stateItemCollection;
+    private volatile int mq, sq;
+
     private void Test()
     {
-        while (_threadStarted)
+      while (_threadStarted)
+      {
+        Thread.Sleep(TimeSpan.FromSeconds(1));
+        if (!_threadStarted) break;
+
+        //// Get the dispatcher from the current window, and use it to invoke 
+        //// the getting data from main thread.
+        this.Dispatcher.Invoke(DispatcherPriority.Normal,
+          (ThreadStart)delegate()
+            {
+              machineItemCollection = DataGridMachines.Items;
+              stateItemCollection = DataGridStates.Items;
+              mq = _MachineQuantity();
+              sq = DataGridStates.Items.Count;
+            }
+          );
+
+        int stateProcCnt = 0;
+        foreach (var state in stateItemCollection)
         {
-          Thread.Sleep(TimeSpan.FromSeconds(1));
-          if(!_threadStarted) break;
-          Thread.Sleep(TimeSpan.FromSeconds(1));
+          var st = (State)state;
+          int machineProcCnt = 0;
+          foreach (var machine in machineItemCollection)
+          {
+            if (!_threadStarted) break;
+
+            // TODO - шлём команду на ddserver
+            // ...
+
+            machineProcCnt++;
+            if (machineProcCnt > mq)
+              break;
+          }
+          stateProcCnt++;
+
           if (!_threadStarted) break;
+
+          // отрабатываем задержку
+          double ss = (double)st.MsDelay / 1000;
+          Thread.Sleep(TimeSpan.FromSeconds(ss));
         }
+
+      }
     }
-  
   }
 }
