@@ -22,7 +22,7 @@ namespace WPF_AIPStressTesting01
   public partial class MainWindow : Window
   {
     public const int MachineQuantityMax = 100;
-    public const int TimeScaleFactorMax = 100;
+    public const int TimeScaleFactorMax = 1000;
 
     public MainWindow()
     {
@@ -48,7 +48,7 @@ namespace WPF_AIPStressTesting01
       if (value < 1)
         value = MachineQuantityMax;
       else if (value > MachineQuantityMax)
-        value = 1;
+        value = MachineQuantityMax;
 
       txtBox.Text = value.ToString();
     }
@@ -103,21 +103,23 @@ namespace WPF_AIPStressTesting01
 
       if (e.Direction == SpinDirection.Increase)
       {
-        if (value > .09 && value < .1)
+        if (value > .009 && value < .01)
+          value = .009;
+        else if (value > .09 && value < .1)
           value = .09;
         else if (value > .9 && value < 1)
             value = .9;
-        delta = value < .1 ? .01 : (value < 1 ? .1 : 1);
+        delta = value < .01 ? .001 : (value < .1 ? .01 : (value < 1 ? .1 : 1));
         value += delta;
       }
       else
       {
-        delta = value <= .1 ? .01 : (value <= 1 ? .1 : 1);
+        delta = value <= .01 ? .001 : (value <= .1 ? .01 : (value <= 1 ? .1 : 1));
         value -= delta;
       }
 
       if (value <= 0)
-        value = .01;
+        value = .001;
       else if (value > TimeScaleFactorMax)
         value = TimeScaleFactorMax;
 
