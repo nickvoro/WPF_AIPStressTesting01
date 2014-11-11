@@ -113,7 +113,7 @@
         </StackPanel>
         <StackPanel Grid.Row="2" Orientation="Vertical" Height="67" Margin="0,0,0,-7" Background="AntiqueWhite">
             <Button Name="ButtonStart" Content="Start test" Margin="0,5,0,2" Width="100" Background="CornflowerBlue" Click="ButtonStart_Click" />
-            <Button Name="ButtonStop" Content="Stop test" Margin="0" Width="100" Background="Peru" Click="ButtonStop_Click" />
+            <Button Name="ButtonStop" Content="Stop test" Margin="0" Width="100" Background="Peru" Click="ButtonStop_Click" IsEnabled="False" />
         </StackPanel>
     </Grid>
 </Window>

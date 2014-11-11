@@ -221,7 +221,7 @@ namespace WPF_AIPStressTesting01
       _threadStarted = false;
       ButtonStop.IsEnabled = false;
       _NestedEmptyMessageLoop();
-      if ((_thread != null)) while (_thread.Join(1000)) {};
+      while (_thread != null && _thread.Join(2000)) { _thread.Interrupt(); _thread = null; }
       ButtonStart.IsEnabled = true;
     }
 
@@ -256,8 +256,10 @@ namespace WPF_AIPStressTesting01
     {
         while (_threadStarted)
         {
-          Thread.Sleep(TimeSpan.FromSeconds(4));
-          Thread.Sleep(TimeSpan.FromSeconds(4));
+          Thread.Sleep(TimeSpan.FromSeconds(1));
+          if(!_threadStarted) break;
+          Thread.Sleep(TimeSpan.FromSeconds(1));
+          if (!_threadStarted) break;
         }
     }
   
