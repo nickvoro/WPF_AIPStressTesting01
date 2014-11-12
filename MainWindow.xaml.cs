@@ -39,9 +39,12 @@ namespace WPF_AIPStressTesting01
     }
 
     // ButtonSpinner SpinnerMachineQuantity
+    private volatile bool _smqInKeyProccessing;
 
     private void SpinnerMachineQuantity_Spin(object sender, SpinEventArgs e)
     {
+      _smqInKeyProccessing = true;
+
       var spinner = (ButtonSpinner)sender;
       var txtBox = (TextBox)spinner.Content;
       int i;
@@ -58,29 +61,41 @@ namespace WPF_AIPStressTesting01
         value = MachineQuantityMax;
 
       txtBox.Text = value.ToString();
+
+      _smqInKeyProccessing = false;
     }
 
     private void SpinnerMachineQuantity_KeyDown(object sender, KeyEventArgs e)
     {
+      _smqInKeyProccessing = true;
+      
       const string rStr = "^(D|NumPad)[0-9]$";
 
       if (e.Key == Key.Tab)
       {
+        _smqInKeyProccessing = false;
         return;
       }
 
       var key = e.Key.ToString();
       var r = new Regex(rStr, RegexOptions.IgnoreCase);
       e.Handled = !r.IsMatch(key);
+
+      _smqInKeyProccessing = false;
     }
 
     private void SpinnerMachineQuantity_KeyUp(object sender, KeyEventArgs e)
     {
+      _smqInKeyProccessing = true;
+
       var spinner = (ButtonSpinner)sender;
       var txtBox = (TextBox)spinner.Content;
 
       if (String.IsNullOrEmpty(txtBox.Text))
+      {
+        _smqInKeyProccessing = false;
         return;
+      }
 
       int i;
       var value = !int.TryParse(txtBox.Text, out i) ? MachineQuantityMax : i;
@@ -88,6 +103,7 @@ namespace WPF_AIPStressTesting01
       if (value == 0 || value == MachineQuantityMax)
       {
         txtBox.Text = value.ToString();
+        _smqInKeyProccessing = false;
         return;
       }
 
@@ -99,12 +115,17 @@ namespace WPF_AIPStressTesting01
           value = MachineQuantityMax;
         txtBox.Text = value.ToString();
       }
+
+      _smqInKeyProccessing = false;
     }
 
     // ButtonSpinner SpinnerTimeScaleFactor
+    private volatile bool _stsfInKeyProccessing;
 
     private void SpinnerTimeScaleFactor_Spin(object sender, SpinEventArgs e)
     {
+      _stsfInKeyProccessing = true;
+
       var spinner = (ButtonSpinner)sender;
       var txtBox = (TextBox)spinner.Content;
       double d;
@@ -134,10 +155,14 @@ namespace WPF_AIPStressTesting01
         value = TimeScaleFactorMax;
 
       txtBox.Text = value.ToString();
+
+      _stsfInKeyProccessing = false;
     }
 
     private void SpinnerTimeScaleFactor_KeyDown(object sender, KeyEventArgs e)
     {
+      _stsfInKeyProccessing = true;
+
       const string rStr = "^((D|NumPad)[0-9]|OemPeriod|Decimal)$";
 
       var spinner = (ButtonSpinner)sender;
@@ -145,21 +170,29 @@ namespace WPF_AIPStressTesting01
 
       if (e.Key == Key.Tab)
       {
+        _stsfInKeyProccessing = false;
         return;
       }
 
       var key = e.Key.ToString();
       var r = new Regex(rStr, RegexOptions.IgnoreCase);
       e.Handled = !r.IsMatch(key) || ((key == "OemPeriod" || key == "Decimal") && txtBox.Text.Contains("."));
+
+      _stsfInKeyProccessing = false;
     }
 
     private void SpinnerTimeScaleFactor_KeyUp(object sender, KeyEventArgs e)
     {
+      _stsfInKeyProccessing = true;
+
       var spinner = (ButtonSpinner)sender;
       var txtBox = (TextBox)spinner.Content;
 
       if (String.IsNullOrEmpty(txtBox.Text))
+      {
+        _stsfInKeyProccessing = false;
         return;
+      }
 
       double d;
       var value = !double.TryParse(txtBox.Text, out d) ? TimeScaleFactorMax : d;
@@ -167,11 +200,13 @@ namespace WPF_AIPStressTesting01
       if (value == TimeScaleFactorMax)
       {
         txtBox.Text = value.ToString();
+        _stsfInKeyProccessing = false;
         return;
       }
 
       if (value == 0)
       {
+        _stsfInKeyProccessing = false;
         return;
       }
 
@@ -183,6 +218,8 @@ namespace WPF_AIPStressTesting01
           value = TimeScaleFactorMax;
         txtBox.Text = value.ToString();
       }
+
+      _stsfInKeyProccessing = false;
     }
 
     // DataGridMachines
@@ -299,14 +336,33 @@ namespace WPF_AIPStressTesting01
       });
     }
 
+    private volatile bool _isSpinnerInKeyProccessing;
+    private bool WDisp_IsSpinnerInKeyProccessing()
+    {
+      this.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate()
+        {
+          _isSpinnerInKeyProccessing = _smqInKeyProccessing || _stsfInKeyProccessing;
+        });
+      return _isSpinnerInKeyProccessing;
+    }
+
     private volatile int _machineQuantityNew;
     private double _timeScaleFactorNew;
     private bool WDisp_IsData1Changed()
     {
       this.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate()
       {
-        _machineQuantityNew = _MachineQuantity();
-        _timeScaleFactorNew = _TimeScaleFactor();
+        if (_smqInKeyProccessing || _stsfInKeyProccessing)
+        {
+          // до момента окончания обработки спиновых полей считаем, что изменений нет
+          _machineQuantityNew = mq;
+          _timeScaleFactorNew = tsf;
+        }
+        else
+        {
+          _machineQuantityNew = _MachineQuantity();
+          _timeScaleFactorNew = _TimeScaleFactor();
+        }
       });
       return _machineQuantityNew != mq || _timeScaleFactorNew != tsf;
     }
@@ -315,7 +371,13 @@ namespace WPF_AIPStressTesting01
     {
       this.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate()
       {
-        _machineQuantityNew = _MachineQuantity();
+        if (_smqInKeyProccessing)
+        {
+          // до момента окончания обработки спиновых полей считаем, что изменений нет
+          _machineQuantityNew = mq;
+        }
+        else
+          _machineQuantityNew = _MachineQuantity();
       });
       return _machineQuantityNew != mq;
     }
@@ -324,7 +386,13 @@ namespace WPF_AIPStressTesting01
     {
       this.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate()
       {
-        _timeScaleFactorNew = _TimeScaleFactor();
+        if (_stsfInKeyProccessing)
+        {
+          // до момента окончания обработки спиновых полей считаем, что изменений нет
+          _timeScaleFactorNew = tsf;
+        }
+        else
+          _timeScaleFactorNew = _TimeScaleFactor();
       });
       return _timeScaleFactorNew != tsf;
     }
@@ -351,9 +419,12 @@ namespace WPF_AIPStressTesting01
       WDisp_GetData();
       while (_threadStarted)
       {
-        //Thread.Sleep(TimeSpan.FromSeconds(1));
         if (!_threadStarted) break;
+
+        if (WDisp_IsSpinnerInKeyProccessing()) break;
         WDisp_GetData1();
+        if (mq <= 0 || mq > MachineQuantityMax) break;
+        if (tsf <= 0 || tsf > TimeScaleFactorMax) break;
 
         var stateIdx = new long[mq];
 
