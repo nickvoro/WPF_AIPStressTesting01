@@ -22,10 +22,16 @@ namespace WPF_AIPStressTesting01
             }
         }
 
+        private string _designation;
         public string Designation
         {
             // TODO добавить конвертацию статусов в текстовые аналоги
             get { return this._status.ToString(); }
+            set
+            {
+              _designation = value;
+              OnPropertyChanged("Designation");
+            }
         }
 
         private int _ms_delay;

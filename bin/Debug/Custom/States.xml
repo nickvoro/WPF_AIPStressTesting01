@@ -1,0 +1,26 @@
+<states>
+<state id="1">STANOK VYKLYuChEN</state>
+<state id="2">AVARIINAYa OSTANOVKA</state>
+<state id="3">VSPOMOGAT.VREMYa (A)</state>
+<state id="4">PROGREV, SMAZKA</state>
+<state id="6">OPER. NE REAGIRUET</state>
+<state id="7">IZGOT-E DETALI PO UP</state>
+<state id="10">OSTANOVKA PODAChI</state>
+<state id="11">NET OPERATORA</state>
+<state id="12">VSPOMOGAT.VREMYa (R)</state>
+<state id="13">OBSLUJ-E OPERATOROM</state>
+<state id="14">PZV </state>
+<state id="15">NET ZAKAZA</state>
+<state id="16">OTSUTSTV. STO</state>
+<state id="17">OTSUTSTV. UP</state>
+<state id="18">OTSUTSTV. ZAGOTOVKA</state>
+<state id="19">OTSUTSTV.VSPOM.PERS</state>
+<state id="20">REShENIE TEH VOPROSOV</state>
+<state id="21">OTSUTSTV. ZAKAZ</state>
+<state id="22">REGLAMENT. PERERYVY</state>
+<state id="23">REMONT POSLE AVARII</state>
+<state id="24">PLAN.-PREDUPR.REMONT</state>
+<state id="25">VNEDRENIE UP</state>
+<state id="20000">NET RABOChEI SMENY</state>
+<state id="30000">OJID-E REAKCII OPER.</state>
+</states>

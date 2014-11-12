@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using System.Xml;
+using System.Xml.Linq;
 using Xceed.Wpf.Toolkit;
 using System.Text.RegularExpressions;
 using MessageBox = Xceed.Wpf.Toolkit.MessageBox;
@@ -32,12 +35,36 @@ namespace WPF_AIPStressTesting01
     private volatile bool _threadStarted;
     private int MachineQuantityMax = MachineQuantityMaxConst;
 
+    public volatile Hashtable StatesHashtable;
+
     public MainWindow()
     {
       InitializeComponent();
       DataGridMachines.ItemsSource = Machine.GetMachines();
       MachineQuantityMax = DataGridMachines.Items.Count;      // переопределяется по фактическому наличию
       DataGridStates.ItemsSource = State.GetStates();
+      LoadDicts();
+    }
+
+    // dicts
+    private void LoadDicts()
+    {
+      // Заполним StatesHashtable
+
+      XmlReader xmlReader = XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + "Custom\\States.xml");
+      XElement root = XElement.Load(xmlReader);
+      IEnumerable<XElement> states = root.Elements("state");
+      Dictionary<string, string> statesMap = states.ToDictionary(
+      element => element.Attribute("id").Value, // Key selector
+      element => element.Value);
+      Dictionary<int, string> statesMap2 = new Dictionary<int, string>();
+      foreach (KeyValuePair<string, string> pair in statesMap)
+      {
+        int i;
+        bool tryParse = int.TryParse(pair.Key, out i);
+        statesMap2.Add(i, pair.Value);
+      }
+      StatesHashtable = new Hashtable(statesMap2);
     }
 
     // ButtonSpinner SpinnerMachineQuantity
@@ -411,6 +438,7 @@ namespace WPF_AIPStressTesting01
           m.Status = state.Status;
           m.MsDelay = state.MsDelay;
           m.MsInStatus = 0;
+          m.Designation = "";  // не важно
         });
     }
 
