@@ -24,17 +24,19 @@ namespace WPF_AIPStressTesting01
   /// </summary>
   public partial class MainWindow : Window
   {
-    public const int MachineQuantityMax = 100;
+    public const int MachineQuantityMaxConst = 100;
     public const int TimeScaleFactorMax = 1000;
     const double MaxDelayForOneStep = 1;
 
     private Thread _thread;
     private volatile bool _threadStarted;
+    private int MachineQuantityMax = MachineQuantityMaxConst;
 
     public MainWindow()
     {
       InitializeComponent();
       DataGridMachines.ItemsSource = Machine.GetMachines();
+      MachineQuantityMax = DataGridMachines.Items.Count;      // переопределяется по фактическому наличию
       DataGridStates.ItemsSource = State.GetStates();
     }
 
