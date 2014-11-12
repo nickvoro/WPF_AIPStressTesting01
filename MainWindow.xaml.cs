@@ -454,7 +454,7 @@ namespace WPF_AIPStressTesting01
         if (WDisp_IsSpinnerInKeyProccessing()) break;
         WDisp_GetData1();
         if (mq <= 0 || mq > MachineQuantityMax) break;
-        if (tsf <= 0 || tsf > TimeScaleFactorMax) break;
+        if (tsf < 0.001 || tsf > TimeScaleFactorMax) break;
 
         var stateIdx = new long[mq];
 
@@ -506,9 +506,11 @@ namespace WPF_AIPStressTesting01
             {
               double tsfPre = tsf;
               WDisp_GetTimeScaleFactor();
+              if (tsf < 0.001 || tsf > TimeScaleFactorMax) break;  // !!!
               ssScaled = ss * tsf;
               ssToDelay = ssToDelay * tsf / tsfPre;
             }
+            if (tsf < 0.001 || tsf > TimeScaleFactorMax) break;  // !!!
 
             // "жёсткое" изменение - надо выходить на верхний уровень цикла (с переинициализацией)
             if (WDisp_IsMachineQuantityChanged())
