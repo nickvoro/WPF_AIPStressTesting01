@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Windows;
 
 namespace WPF_AIPStressTesting01
 {
@@ -25,12 +26,12 @@ namespace WPF_AIPStressTesting01
         private string _designation;
         public string Designation
         {
-            // TODO добавить конвертацию статусов в текстовые аналоги
-            get { return this._status.ToString(); }
+            get { return _designation; }
             set
             {
-              _designation = value;
-              OnPropertyChanged("Designation");
+                if (value == _designation) return;
+                _designation = value;
+                OnPropertyChanged("Designation");
             }
         }
 
