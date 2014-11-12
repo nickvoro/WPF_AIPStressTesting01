@@ -283,6 +283,52 @@ namespace WPF_AIPStressTesting01
       });
     }
 
+    private void WDisp_GetMachineQuantity()
+    {
+      this.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate()
+      {
+        mq = _MachineQuantity();
+      });
+    }
+
+    private void WDisp_GetTimeScaleFactor()
+    {
+      this.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate()
+      {
+        tsf = _TimeScaleFactor();
+      });
+    }
+
+    private volatile int _machineQuantityNew;
+    private double _timeScaleFactorNew;
+    private bool WDisp_IsData1Changed()
+    {
+      this.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate()
+      {
+        _machineQuantityNew = _MachineQuantity();
+        _timeScaleFactorNew = _TimeScaleFactor();
+      });
+      return _machineQuantityNew != mq || _timeScaleFactorNew != tsf;
+    }
+
+    private bool WDisp_IsMachineQuantityChanged()
+    {
+      this.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate()
+      {
+        _machineQuantityNew = _MachineQuantity();
+      });
+      return _machineQuantityNew != mq;
+    }
+
+    private bool WDisp_IsTimeScaleFactorChanged()
+    {
+      this.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate()
+      {
+        _timeScaleFactorNew = _TimeScaleFactor();
+      });
+      return _timeScaleFactorNew != tsf;
+    }
+
     private long make3(int machineIdx, int stateIdx, int msDelay)
     {
       return machineIdx + 1000 * stateIdx + (long)1000000 * msDelay;
@@ -352,6 +398,20 @@ namespace WPF_AIPStressTesting01
           while (ssToDelay > 0)
           {
             if (!_threadStarted) break;
+
+            // "мягкое" изменение - просто подменим коэффициент
+            if (WDisp_IsTimeScaleFactorChanged())
+            {
+              double tsfPre = tsf;
+              WDisp_GetTimeScaleFactor();
+              ssScaled = ss * tsf;
+              ssToDelay = ssToDelay * tsf / tsfPre;
+            }
+
+            // "жёсткое" изменение - надо выходить на верхний уровень цикла (с переинициализацией)
+            if (WDisp_IsMachineQuantityChanged())
+              break;
+
             double ssToDelayStep = MaxDelayForOneStep > ssToDelay ? ssToDelay : MaxDelayForOneStep;
             Thread.Sleep(TimeSpan.FromSeconds(ssToDelayStep));
             ssToDelay -= ssToDelayStep;
@@ -359,6 +419,12 @@ namespace WPF_AIPStressTesting01
           // запоминаем момент времени (для коррекции следующей задержки)
           ticks = DateTime.Now.Ticks;
 
+          if (!_threadStarted) break;
+
+          // "жёсткое" изменение - надо выходить на верхний уровень цикла (с переинициализацией)
+          if (WDisp_IsMachineQuantityChanged())
+            break;
+          
           // для первых эелементов массива, у которых задержка стала = 0, отрабатываем команду
           // и прописываем следующее состояние
           for (int i = 0; i < mq; i++)
@@ -388,6 +454,7 @@ namespace WPF_AIPStressTesting01
 
           Array.Sort(stateIdx);
         }
+        if (!_threadStarted) break;
 
       }
     }
