@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        Title="MainWindow" Height="Auto" Width="525" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" d:DesignHeight="186" SizeToContent="Height">
+        Title="MainWindow" Height="Auto" Width="614" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" d:DesignHeight="186" SizeToContent="Height">
     <Grid ShowGridLines="False">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
@@ -75,11 +75,11 @@
                 </StackPanel>
                 <DataGrid Grid.Column="0" Name="DataGridMachines"
                           Margin="5,0"
-                  MaxWidth="250"
+                  MaxWidth="350"
                   MaxHeight="250" IsReadOnly="True"
                       HorizontalAlignment="Left"
                   AlternatingRowBackground="LightSteelBlue"
-                  AlternationCount="2" LoadingRow="DataGridMachines_LoadingRow" />
+                  AlternationCount="2" LoadingRow="DataGridMachines_LoadingRow" ForceCursor="True" />
             </StackPanel>
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal">

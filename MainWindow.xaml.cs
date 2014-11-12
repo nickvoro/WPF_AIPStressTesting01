@@ -399,6 +399,34 @@ namespace WPF_AIPStressTesting01
       return _timeScaleFactorNew != tsf;
     }
 
+    private void WDisp_gridSetMachineStatus (int rowIdx, State state)
+    {
+      this.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate()
+        {
+          //DataGridMachines.SelectedItem = DataGridMachines.Items[rowIdx];
+          //Machine m = (Machine)DataGridMachines.SelectedItem;
+          // DataGridMachines.Focus();
+          DataGridMachines.CurrentItem = DataGridMachines.Items[rowIdx];
+          Machine m = (Machine)DataGridMachines.CurrentItem;
+          m.Status = state.Status;
+          m.MsDelay = state.MsDelay;
+          m.MsInStatus = 0;
+        });
+    }
+
+    private void WDisp_gridForAllMachinesAddToMsInStatus(int msAdd)
+    {
+      this.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate()
+      {
+        for (int i = 0; i < mq; i++ )
+        {
+          DataGridMachines.CurrentItem = DataGridMachines.Items[i];
+          Machine m = (Machine)DataGridMachines.CurrentItem;
+          m.MsInStatus = (m.MsInStatus + msAdd > m.MsDelay) ? m.MsDelay : m.MsInStatus + msAdd;
+        }
+      });
+    }
+
     private long make3(int machineIdx, int stateIdx, int msDelay)
     {
       return machineIdx + 1000 * stateIdx + (long)1000000 * msDelay;
@@ -436,6 +464,7 @@ namespace WPF_AIPStressTesting01
         {
           var stateItem = (State)stateItemCollection[j];
           stateIdx[i] = make3(i, j, stateItem.MsDelay);
+          WDisp_gridSetMachineStatus(i, (State)stateItem);   // в таблице установим новый статус
           j++;
           if (j >= sq)
             j = 0;
@@ -488,6 +517,7 @@ namespace WPF_AIPStressTesting01
             double ssToDelayStep = MaxDelayForOneStep > ssToDelay ? ssToDelay : MaxDelayForOneStep;
             Thread.Sleep(TimeSpan.FromSeconds(ssToDelayStep));
             ssToDelay -= ssToDelayStep;
+            WDisp_gridForAllMachinesAddToMsInStatus((int)(MaxDelayForOneStep * 1000 / tsf));
           }
           // запоминаем момент времени (для коррекции следующей задержки)
           ticks = DateTime.Now.Ticks;
@@ -520,6 +550,7 @@ namespace WPF_AIPStressTesting01
                 s1 = 0;
               var stateItem = (State)stateItemCollection[s1];
               stateIdx[i] = make3(m1, s1, stateItem.MsDelay);
+              WDisp_gridSetMachineStatus(m1, (State)stateItem);   // в таблице установим новый статус
             }
             else
               break;

@@ -33,10 +33,34 @@ namespace WPF_AIPStressTesting01
       }
     }
 
-    public string StatusDesignation
+    public string Designation
     {
       // TODO добавить конвертацию статусов в текстовые аналоги
       get { return this._status.ToString(); }
+    }
+
+    private int _ms_delay;
+    public int MsDelay
+    {
+      get { return _ms_delay; }
+      set
+      {
+        if (value == _ms_delay) return;
+        _ms_delay = value; ;
+        OnPropertyChanged("MsDelay");
+      }
+    }
+
+    private int _ms_in_status;
+    public int MsInStatus
+    {
+      get { return _ms_in_status; }
+      set
+      {
+        if (value == _ms_in_status) return;
+        _ms_in_status = value; ;
+        OnPropertyChanged("MsInStatus");
+      }
     }
 
     public static ObservableCollection<Machine> GetMachines()

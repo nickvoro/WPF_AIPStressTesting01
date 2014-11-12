@@ -22,7 +22,7 @@ namespace WPF_AIPStressTesting01
             }
         }
 
-        public string StatusDesignation
+        public string Designation
         {
             // TODO добавить конвертацию статусов в текстовые аналоги
             get { return this._status.ToString(); }
