@@ -610,5 +610,11 @@ namespace WPF_AIPStressTesting01
         {
             DataGridStates.Columns[1].Width = DataGridLength.SizeToHeader;
         }
+
+        private void mwStressTest_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+          if (_threadStarted)
+            ButtonStop_Click(null, null);
+        }
     }
 }
