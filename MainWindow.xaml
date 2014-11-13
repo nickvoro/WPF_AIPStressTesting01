@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         Title="Ddcom Stress Testing" Height="Auto" Width="614" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WPF_AIPStressTesting01" d:DesignHeight="186" SizeToContent="Height" Name="MwStressTest" Closing="mwStressTest_Closing">
+        xmlns:local="clr-namespace:WPF_AIPStressTesting01" xmlns:s="clr-namespace:System;assembly=mscorlib"
+        d:DesignHeight="186" SizeToContent="Height" Name="MwStressTest" Closing="mwStressTest_Closing">
     <Grid ShowGridLines="False">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
@@ -66,7 +67,10 @@
                    Name="TextHydraHost"
                    Text="Host"
                    VerticalAlignment="Center" />
-            <local:MyMaskedTextBox x:Name="TextBoxHydraHost" Mask="000.000.000.000" StayInFocusUntilValid="True" IgnoreSpace="True" MinWidth="95" Height="20" Margin="5"/>
+            <xctk:MaskedTextBox x:Name="TextBoxHydraHost"
+                             MinWidth="95" Height="20" Margin="5"
+                             Mask="000\.000\.000\.000"
+                             ValueDataType="{x:Type s:String}" InsertKeyMode="Overwrite" KeyUp="TextBoxHydraHost_KeyUp" />
         </StackPanel>
         <StackPanel Grid.Row="2" Orientation="Horizontal" Background="PowderBlue">
             <StackPanel Orientation="Vertical">

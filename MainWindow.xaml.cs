@@ -626,5 +626,19 @@ namespace WPF_AIPStressTesting01
       if (_threadStarted)
         ButtonStop_Click(null, null);
     }
+
+    private void TextBoxHydraHost_KeyUp(object sender, KeyEventArgs e)
+    {
+        var mtb = (MaskedTextBox)sender;
+        //var str = mtb.MaskedTextProvider.ToString();
+        var str = mtb.MaskedTextProvider.ToDisplayString();
+        int selectionStart = mtb.SelectionStart;
+        int selectionLength = mtb.SelectionLength;
+        str = str.Replace("_", "0");
+        TextBoxHydraHost.Text = str;
+        mtb.SelectionStart = selectionStart;
+        mtb.SelectionLength = selectionLength;
+    }
+
   }
 }
