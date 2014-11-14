@@ -480,6 +480,16 @@ namespace WPF_AIPStressTesting01
       return _timeScaleFactorNew != tsf;
     }
 
+    private volatile bool _IsCheckSupressDBactionsChecked;
+    private bool WDisp_IsCheckSupressDBactionsChecked()
+    {
+        this.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate()
+        {
+            _IsCheckSupressDBactionsChecked = CheckSupressDBactions.IsChecked.Value;
+        });
+        return _IsCheckSupressDBactionsChecked;
+    }
+
     private void WDisp_gridSetMachineStatus(int rowIdx, State state)
     {
       this.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate()
@@ -650,14 +660,16 @@ namespace WPF_AIPStressTesting01
                 break;
 
               // шлём команду на сервер (= добавление записи в таблицу БД dbo.m_statuses)
-              m_statuse mst = new m_statuse();
-              mst.id = 0;
-              mst.machine_id = WDisp_gridGetMachineId(m1);
-              mst.status = WDisp_gridGetStateId(s1);
-              mst.status_dt = DateTime.Now;
-              db.m_statuses.InsertOnSubmit(mst);
-              db.SubmitChanges();
-
+              if (!WDisp_IsCheckSupressDBactionsChecked())
+              {
+                  m_statuse mst = new m_statuse();
+                  mst.id = 0;
+                  mst.machine_id = WDisp_gridGetMachineId(m1);
+                  mst.status = WDisp_gridGetStateId(s1);
+                  mst.status_dt = DateTime.Now;
+                  db.m_statuses.InsertOnSubmit(mst);
+                  db.SubmitChanges();
+              }
               // прописываем следующее состояние
               s1++;
               if (s1 >= sq)
