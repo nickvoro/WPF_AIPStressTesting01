@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="hypdm" Class="DataClasses1DataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=MES8N\HYDMS1;Initial Catalog=hypdm;Persist Security Info=True;User ID=mstatus_manager" SettingsObjectName="WPF_AIPStressTesting01.Properties.Settings" SettingsPropertyName="hypdmConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.m_statuses" Member="m_statuses">
+    <Type Name="m_statuse">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="machine_id" Type="System.String" DbType="NVarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="status" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="status_dt" Type="System.DateTime" DbType="SmallDateTime NOT NULL" CanBeNull="false" />
+      <Column Name="progname" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="properties" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
+      <Column Name="processed" Type="System.Byte" DbType="TinyInt NOT NULL" CanBeNull="false" />
+      <Column Name="processed_dt" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="ts" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
+    </Type>
+  </Table>
+</Database>

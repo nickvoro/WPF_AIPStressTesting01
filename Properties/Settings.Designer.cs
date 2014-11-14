@@ -22,5 +22,16 @@ namespace WPF_AIPStressTesting01.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=MES8N\\HYDMS1;Initial Catalog=hypdm;Persist Security Info=True;User ID" +
+            "=mstatus_manager;Password=mstatus_manager")]
+        public string hypdmConnectionString {
+            get {
+                return ((string)(this["hypdmConnectionString"]));
+            }
+        }
     }
 }

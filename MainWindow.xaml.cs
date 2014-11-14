@@ -31,6 +31,8 @@ namespace WPF_AIPStressTesting01
 
     public volatile Hashtable StatesHashtable;
 
+    private DataClasses1DataContext db;
+
     public MainWindow()
     {
       InitializeComponent();
@@ -39,6 +41,8 @@ namespace WPF_AIPStressTesting01
       //string ip = "192.168.9.11";  // mes8a
       string ip = "192.168.3.27";  // mes8n
       TextBoxHydraHost.Text = padIP(ip);
+
+      db = new DataClasses1DataContext();
     }
 
     private string padIP(string ip)
@@ -492,6 +496,30 @@ namespace WPF_AIPStressTesting01
         });
     }
 
+    private volatile string _mnr;
+    private string WDisp_gridGetMachineId(int rowIdx)
+    {
+      this.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate()
+      {
+        DataGridMachines.CurrentItem = DataGridMachines.Items[rowIdx];
+        Machine m = (Machine)DataGridMachines.CurrentItem;
+        _mnr = m.Mnr;
+      });
+      return _mnr;
+    }
+
+    private volatile int _state;
+    private int WDisp_gridGetStateId(int rowIdx)
+    {
+      this.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate()
+      {
+        DataGridStates.CurrentItem = DataGridStates.Items[rowIdx];
+        State s = (State)DataGridStates.CurrentItem;
+        _state = s.Status;
+      });
+      return _state;
+    }
+
     private void WDisp_gridForAllMachinesAddToMsInStatus(int msAdd)
     {
       this.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate()
@@ -621,8 +649,14 @@ namespace WPF_AIPStressTesting01
               if (!_threadStarted)
                 break;
 
-              // TODO - шлём команду на сервер
-              // ...
+              // шлём команду на сервер (= добавление записи в таблицу БД dbo.m_statuses)
+              m_statuse mst = new m_statuse();
+              mst.id = 0;
+              mst.machine_id = WDisp_gridGetMachineId(m1);
+              mst.status = WDisp_gridGetStateId(s1);
+              mst.status_dt = DateTime.Now;
+              db.m_statuses.InsertOnSubmit(mst);
+              db.SubmitChanges();
 
               // прописываем следующее состояние
               s1++;
