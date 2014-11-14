@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<StatesSequence>
+<StateMsDelay state_id="1">1000</StateMsDelay>
+<StateMsDelay state_id="3">2000</StateMsDelay>
+<StateMsDelay state_id="12">2000</StateMsDelay>
+<StateMsDelay state_id="4">1000</StateMsDelay>
+<StateMsDelay state_id="13">3000</StateMsDelay>
+<StateMsDelay state_id="17">1000</StateMsDelay>
+<StateMsDelay state_id="25">4000</StateMsDelay>
+<StateMsDelay state_id="15">5000</StateMsDelay>
+<StateMsDelay state_id="20">6000</StateMsDelay>
+<StateMsDelay state_id="5">3000</StateMsDelay>
+<StateMsDelay state_id="7">10000</StateMsDelay>
+<StateMsDelay state_id="10">1000</StateMsDelay>
+<StateMsDelay state_id="30000">4000</StateMsDelay>
+<StateMsDelay state_id="7">15000</StateMsDelay>
+<StateMsDelay state_id="10">2000</StateMsDelay>
+<StateMsDelay state_id="1">4000</StateMsDelay>
+<StateMsDelay state_id="22">500</StateMsDelay>
+<StateMsDelay state_id="18">15000</StateMsDelay>
+<StateMsDelay state_id="13">5000</StateMsDelay>
+<StateMsDelay state_id="7">13000</StateMsDelay>
+<StateMsDelay state_id="2">12000</StateMsDelay>
+<StateMsDelay state_id="1">7000</StateMsDelay>
+<StateMsDelay state_id="23">3000</StateMsDelay>
+<StateMsDelay state_id="20">5000</StateMsDelay>
+<StateMsDelay state_id="19">2000</StateMsDelay>
+<StateMsDelay state_id="3">2000</StateMsDelay>
+<StateMsDelay state_id="12">7000</StateMsDelay>
+<StateMsDelay state_id="4">2000</StateMsDelay>
+<StateMsDelay state_id="7">8000</StateMsDelay>
+<StateMsDelay state_id="18">3000</StateMsDelay>
+<StateMsDelay state_id="11">2000</StateMsDelay>
+<StateMsDelay state_id="13">5500</StateMsDelay>
+<StateMsDelay state_id="21">6500</StateMsDelay>
+<StateMsDelay state_id="6">1000</StateMsDelay>
+<StateMsDelay state_id="1">12000</StateMsDelay>
+<StateMsDelay state_id="14">3000</StateMsDelay>
+<StateMsDelay state_id="16">19000</StateMsDelay>
+<StateMsDelay state_id="24">20000</StateMsDelay>
+<StateMsDelay state_id="20000">3000</StateMsDelay>
+<StateMsDelay state_id="1">6000</StateMsDelay>
+</StatesSequence>

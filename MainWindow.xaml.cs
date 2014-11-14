@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -60,7 +59,9 @@ namespace WPF_AIPStressTesting01
     {
       XmlReader xmlReader;
       XElement root;
+      int i, i2;
 
+      // Популируем таблицу DataGridMachines
       //DataGridMachines.ItemsSource = Machine.GetMachines();
       xmlReader = XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + "Custom\\Machines.xml");
       root = XElement.Load(xmlReader);
@@ -74,9 +75,22 @@ namespace WPF_AIPStressTesting01
         ocMachines.Add(new Machine() { Mnr = pair.Key, Name = pair.Value });
       }
       DataGridMachines.ItemsSource = ocMachines;
+
       MachineQuantityMax = DataGridMachines.Items.Count;      // переопределяется по фактическому наличию
-      
-      DataGridStates.ItemsSource = State.GetStates();
+
+      // Популируем таблицу DataGridStates1
+      // DataGridStates.ItemsSource = State.GetStates();
+      xmlReader = XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + "Custom\\StatesSequence.xml");
+      root = XElement.Load(xmlReader);
+      IEnumerable<XElement> stateMsDelays = root.Elements("StateMsDelay");
+      var ocStateMsDelays = new ObservableCollection<State>();
+      foreach (XElement stateMsDelay in stateMsDelays)
+      {
+        int.TryParse(stateMsDelay.FirstAttribute.Value, out i);
+        int.TryParse(stateMsDelay.Value, out i2);
+        ocStateMsDelays.Add(new State() { Status = i, MsDelay = i2 });
+      }
+      DataGridStates.ItemsSource = ocStateMsDelays;
 
       // Заполним словарь состояний (StatesHashtable)
       xmlReader = XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + "Custom\\States.xml");
@@ -88,16 +102,15 @@ namespace WPF_AIPStressTesting01
       Dictionary<int, string> statesMap2 = new Dictionary<int, string>();
       foreach (KeyValuePair<string, string> pair in statesMap)
       {
-        int i;
         bool tryParse = int.TryParse(pair.Key, out i);
         statesMap2.Add(i, pair.Value);
       }
       StatesHashtable = new Hashtable(statesMap2);
 
       // Пропишем названия статусов в таблице DataGridStates
-      for (int i = 0; i < DataGridStates.Items.Count; i++)
+      for (int j = 0; j < DataGridStates.Items.Count; j++)
       {
-        DataGridStates.CurrentItem = DataGridStates.Items[i];
+        DataGridStates.CurrentItem = DataGridStates.Items[j];
         State s = (State)DataGridStates.CurrentItem;
         s.Designation = StatesHashtable.Contains(s.Status) ? StatesHashtable[s.Status].ToString() : s.Status.ToString();
       }

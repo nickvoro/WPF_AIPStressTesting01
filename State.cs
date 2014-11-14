@@ -47,10 +47,10 @@ namespace WPF_AIPStressTesting01
             }
         }
 
+/*
         public static ObservableCollection<State> GetStates()
         {
             var states = new ObservableCollection<State>();
-            // TODO переработать на заполнение списка из БД или внешнего файла
             states.Add(new State() { Status = 1, MsDelay = 5000 });
             states.Add(new State() { Status = 2, MsDelay = 4000 });
             states.Add(new State() { Status = 5, MsDelay = 3000 });
@@ -58,6 +58,7 @@ namespace WPF_AIPStressTesting01
             states.Add(new State() { Status = 4, MsDelay = 5000 });
             return states;
         }
+*/
 
         public event PropertyChangedEventHandler PropertyChanged;
 

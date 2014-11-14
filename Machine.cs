@@ -81,10 +81,10 @@ namespace WPF_AIPStressTesting01
       }
     }
 
+/*
     public static ObservableCollection<Machine> GetMachines()
     {
       var machines = new ObservableCollection<Machine>();
-      // TODO переработать на заполнение списка из БД или внешнего файла
       machines.Add(new Machine() { Mnr = "18210004", Status = 1 });
       machines.Add(new Machine() { Mnr = "18210005", Status = 1 });
       machines.Add(new Machine() { Mnr = "18210009", Status = 4 });
@@ -99,7 +99,7 @@ namespace WPF_AIPStressTesting01
       machines.Add(new Machine() { Mnr = "16290076", Status = 5 });
       return machines;
     }
-
+*/
     public event PropertyChangedEventHandler PropertyChanged;
 
     protected virtual void OnPropertyChanged(string propertyName)
