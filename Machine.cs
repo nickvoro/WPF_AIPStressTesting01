@@ -21,6 +21,18 @@ namespace WPF_AIPStressTesting01
       }
     }
 
+    private string _name;
+    public string Name
+    {
+      get { return _name; }
+      set
+      {
+        if (value == _name) return;
+        _name = value;
+        OnPropertyChanged("Name");
+      }
+    }
+
     private int _status;
     public int Status
     {

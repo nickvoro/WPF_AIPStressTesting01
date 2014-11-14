@@ -151,7 +151,9 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Custom\Machines.xml" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Custom\States.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
