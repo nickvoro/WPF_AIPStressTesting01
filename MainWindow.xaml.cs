@@ -65,12 +65,16 @@ namespace WPF_AIPStressTesting01
     // dicts
     private void LoadDicts()
     {
+      LoadMachines_xml();
+      LoadStatesSequence();
+      LoadStatesDictionary_xml();
+    }
+
+    private void LoadStatesDictionary_xml()
+    {
       XmlReader xmlReader;
       XElement root;
       int i;
-
-      LoadMachines();
-      LoadStates();
 
       // Заполним словарь состояний (StatesHashtable)
       xmlReader = XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + "Custom\\States.xml");
@@ -94,10 +98,24 @@ namespace WPF_AIPStressTesting01
         State s = (State)DataGridStates.CurrentItem;
         s.Designation = StatesHashtable.Contains(s.Status) ? StatesHashtable[s.Status].ToString() : s.Status.ToString();
       }
-
     }
-
-    private void LoadStates()
+    private void LoadStatesDictionary_db()
+    {
+      Table<stoertexte> stoertexte = db2.GetTable<stoertexte>();
+      StatesHashtable.Clear();
+      foreach (stoertexte st in stoertexte)
+      {
+        StatesHashtable.Add((int)st.stoertxt_nr, st.stoer_text_18);
+      }
+      // Пропишем названия статусов в таблице DataGridStates
+      for (int j = 0; j < DataGridStates.Items.Count; j++)
+      {
+        DataGridStates.CurrentItem = DataGridStates.Items[j];
+        State s = (State)DataGridStates.CurrentItem;
+        s.Designation = StatesHashtable.Contains(s.Status) ? StatesHashtable[s.Status].ToString() : s.Status.ToString();
+      }
+    }
+    private void LoadStatesSequence()
     {
       XmlReader xmlReader;
       XElement root;
@@ -117,7 +135,7 @@ namespace WPF_AIPStressTesting01
       }
       DataGridStates.ItemsSource = ocStateMsDelays;
     }
-    private void LoadMachines()
+    private void LoadMachines_xml()
     {
       // Популируем таблицу DataGridMachines
 
@@ -138,6 +156,19 @@ namespace WPF_AIPStressTesting01
       }
       DataGridMachines.ItemsSource = ocMachines;
 
+      MachineQuantityMax = DataGridMachines.Items.Count;      // переопределяется по фактическому наличию
+    }
+    private void LoadMachines_db()
+    {
+      // загружаем список машин из БД
+      this.Cursor = Cursors.Wait;
+      Table<maschinen> maschinen = db2.GetTable<maschinen>();
+      var ocMachines = new ObservableCollection<Machine>();
+      foreach (maschinen m in maschinen)
+      {
+        ocMachines.Add(new Machine() { Mnr = m.masch_nr, Name = m.bez_lang_18 });
+      }
+      DataGridMachines.ItemsSource = ocMachines;
       MachineQuantityMax = DataGridMachines.Items.Count;      // переопределяется по фактическому наличию
     }
 
@@ -758,26 +789,17 @@ namespace WPF_AIPStressTesting01
         {
           // ждём окончания обработки, вызванной по кнопке "Stop"
         }
-        //Thread.Sleep(TimeSpan.FromSeconds(3));
       }
       var chk = (CheckBox)sender;
       if (chk.IsChecked.Value)
       {
         // загружаем список машин из БД
-        this.Cursor = Cursors.Wait;
-        Table<maschinen> maschinen = db2.GetTable<maschinen>();
-        var ocMachines = new ObservableCollection<Machine>();
-        foreach (maschinen m in maschinen)
-        {
-          ocMachines.Add(new Machine() {Mnr = m.masch_nr, Name = m.bez_lang_18});
-        }
-        DataGridMachines.ItemsSource = ocMachines;
-        MachineQuantityMax = DataGridMachines.Items.Count;      // переопределяется по фактическому наличию
+        LoadMachines_db();
       }
       else
       {
         // загружаем список машин из Machines.xml
-        LoadMachines();
+        LoadMachines_xml();
       }
       this.Cursor = cursor;
       var txtBox = (TextBox)SpinnerMachineQuantity.Content;
@@ -785,6 +807,30 @@ namespace WPF_AIPStressTesting01
       int value = String.IsNullOrEmpty(txtBox.Text) || !int.TryParse(txtBox.Text, out i) ? 0 : Convert.ToInt32(txtBox.Text);
       if (value > MachineQuantityMax)
         txtBox.Text = MachineQuantityMax.ToString();
+    }
+
+    private void CheckLoadStatesFromDb_Click(object sender, RoutedEventArgs e)
+    {
+      Cursor cursor = this.Cursor;
+      if (_threadStarted)
+      {
+        mq = 1;
+        ButtonStop_Click(null, null);
+        while (!_buttonStopProcessed)
+        {
+          // ждём окончания обработки, вызванной по кнопке "Stop"
+        }
+      }
+      var chk = (CheckBox)sender;
+      if (chk.IsChecked.Value)
+      {
+        LoadStatesDictionary_db();
+      }
+      else
+      {
+        LoadStatesDictionary_xml();
+      }
+      this.Cursor = cursor;
     }
   }
 }

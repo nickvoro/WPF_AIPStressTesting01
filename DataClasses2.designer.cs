@@ -69,6 +69,14 @@ namespace WPF_AIPStressTesting01
 				return this.GetTable<maschinen>();
 			}
 		}
+		
+		public System.Data.Linq.Table<stoertexte> stoertextes
+		{
+			get
+			{
+				return this.GetTable<stoertexte>();
+			}
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="hydadm.maschinen")]
@@ -4269,6 +4277,195 @@ namespace WPF_AIPStressTesting01
 				if ((this._bezeichnung_18 != value))
 				{
 					this._bezeichnung_18 = value;
+				}
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="hydadm.stoertexte")]
+	public partial class stoertexte
+	{
+		
+		private System.Nullable<short> _stoertxt_nr;
+		
+		private string _stoer_text;
+		
+		private string _bearb;
+		
+		private System.Nullable<System.DateTime> _bearb_date;
+		
+		private System.Nullable<int> _bearb_time;
+		
+		private System.Nullable<int> _farbe;
+		
+		private System.Nullable<int> _rgbcolor;
+		
+		private string _stoer_text_1;
+		
+		private string _stoer_text_2;
+		
+		private string _stoer_text_18;
+		
+		public stoertexte()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_stoertxt_nr", DbType="SmallInt")]
+		public System.Nullable<short> stoertxt_nr
+		{
+			get
+			{
+				return this._stoertxt_nr;
+			}
+			set
+			{
+				if ((this._stoertxt_nr != value))
+				{
+					this._stoertxt_nr = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_stoer_text", DbType="NVarChar(20)")]
+		public string stoer_text
+		{
+			get
+			{
+				return this._stoer_text;
+			}
+			set
+			{
+				if ((this._stoer_text != value))
+				{
+					this._stoer_text = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_bearb", DbType="NVarChar(10)")]
+		public string bearb
+		{
+			get
+			{
+				return this._bearb;
+			}
+			set
+			{
+				if ((this._bearb != value))
+				{
+					this._bearb = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_bearb_date", DbType="DateTime")]
+		public System.Nullable<System.DateTime> bearb_date
+		{
+			get
+			{
+				return this._bearb_date;
+			}
+			set
+			{
+				if ((this._bearb_date != value))
+				{
+					this._bearb_date = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_bearb_time", DbType="Int")]
+		public System.Nullable<int> bearb_time
+		{
+			get
+			{
+				return this._bearb_time;
+			}
+			set
+			{
+				if ((this._bearb_time != value))
+				{
+					this._bearb_time = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_farbe", DbType="Int")]
+		public System.Nullable<int> farbe
+		{
+			get
+			{
+				return this._farbe;
+			}
+			set
+			{
+				if ((this._farbe != value))
+				{
+					this._farbe = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_rgbcolor", DbType="Int")]
+		public System.Nullable<int> rgbcolor
+		{
+			get
+			{
+				return this._rgbcolor;
+			}
+			set
+			{
+				if ((this._rgbcolor != value))
+				{
+					this._rgbcolor = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_stoer_text_1", DbType="NVarChar(20)")]
+		public string stoer_text_1
+		{
+			get
+			{
+				return this._stoer_text_1;
+			}
+			set
+			{
+				if ((this._stoer_text_1 != value))
+				{
+					this._stoer_text_1 = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_stoer_text_2", DbType="NVarChar(20)")]
+		public string stoer_text_2
+		{
+			get
+			{
+				return this._stoer_text_2;
+			}
+			set
+			{
+				if ((this._stoer_text_2 != value))
+				{
+					this._stoer_text_2 = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_stoer_text_18", DbType="NVarChar(20)")]
+		public string stoer_text_18
+		{
+			get
+			{
+				return this._stoer_text_18;
+			}
+			set
+			{
+				if ((this._stoer_text_18 != value))
+				{
+					this._stoer_text_18 = value;
 				}
 			}
 		}

@@ -94,10 +94,14 @@
                     <TextBlock Margin="0,5"
                    Name="Tmp1"
                    Text=")" />
-                    <CheckBox Margin="25,0" VerticalAlignment="Center"
+                    <CheckBox Margin="25,0,5,0" VerticalAlignment="Center"
                           HorizontalAlignment="Left"
                       Content="Load Machines From DB"
                       Name="CheckLoadMachinesFromDb" Click="CheckLoadMachinesFromDb_Click" />
+                    <CheckBox Margin="5,0" VerticalAlignment="Center"
+                          HorizontalAlignment="Left"
+                      Content="Load States From DB"
+                      Name="CheckLoadStatesFromDb" Click="CheckLoadStatesFromDb_Click" />
                 </StackPanel>
                 <DataGrid Grid.Column="0" Name="DataGridMachines"
                           Margin="5,0,0,15"
