@@ -70,7 +70,7 @@ namespace WPF_AIPStressTesting01
       int i;
 
       LoadMachines();
-      LoadStates()
+      LoadStates();
 
       // Заполним словарь состояний (StatesHashtable)
       xmlReader = XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + "Custom\\States.xml");
