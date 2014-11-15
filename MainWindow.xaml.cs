@@ -7,8 +7,8 @@ using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using System.Xml;
 using System.Xml.Linq;
@@ -562,6 +562,10 @@ namespace WPF_AIPStressTesting01
           m.Designation = StatesHashtable.Contains(state.Status) ? StatesHashtable[state.Status].ToString() : m.Status.ToString();
           m.MsDelay = state.MsDelay;
           m.MsInStatus = 0;
+          // на мин.интервал времени меняем цвет фона (чтобы показать, что изменился статус) 
+          var row = DataGridMachines.ItemContainerGenerator.ContainerFromItem(m) as DataGridRow;
+          if (row != null)
+            row.Background = Brushes.LightSkyBlue;
         });
     }
 
@@ -598,6 +602,18 @@ namespace WPF_AIPStressTesting01
           DataGridMachines.CurrentItem = DataGridMachines.Items[i];
           Machine m = (Machine)DataGridMachines.CurrentItem;
           m.MsInStatus = (m.MsInStatus + msAdd > m.MsDelay) ? m.MsDelay : m.MsInStatus + msAdd;
+
+          // если цвет фона изменённый (меняется при смене статуса) - восстанавливаем через мин.интервал времени
+          var row = DataGridMachines.ItemContainerGenerator.ContainerFromItem(m) as DataGridRow;
+          if ((row != null) && Equals(row.Background, Brushes.LightSkyBlue))
+          {
+            //if (i%2 == 0)
+            //  row.Background = Brushes.White;
+            //else
+            //  row.Background = DataGridMachines.AlternatingRowBackground;
+            row.Background = Brushes.White;
+          }
+        
         }
       });
     }
