@@ -2,10 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.Linq;
 using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.Xml;
@@ -32,6 +34,7 @@ namespace WPF_AIPStressTesting01
     public volatile Hashtable StatesHashtable;
 
     private DataClasses1DataContext db;
+    private DataClasses2DataContext db2;
 
     public MainWindow()
     {
@@ -43,6 +46,7 @@ namespace WPF_AIPStressTesting01
       TextBoxHydraHost.Text = padIP(ip);
 
       db = new DataClasses1DataContext();
+      db2 = new DataClasses2DataContext();
     }
 
     private string padIP(string ip)
@@ -63,38 +67,10 @@ namespace WPF_AIPStressTesting01
     {
       XmlReader xmlReader;
       XElement root;
-      int i, i2;
+      int i;
 
-      // Популируем таблицу DataGridMachines
-      //DataGridMachines.ItemsSource = Machine.GetMachines();
-      xmlReader = XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + "Custom\\Machines.xml");
-      root = XElement.Load(xmlReader);
-      IEnumerable<XElement> machines = root.Elements("machine");
-      Dictionary<string, string> machinesMap = machines.ToDictionary(
-      element => element.Attribute("mnr").Value, // Key selector
-      element => element.Value);
-      var ocMachines = new ObservableCollection<Machine>();
-      foreach (KeyValuePair<string, string> pair in machinesMap)
-      {
-        ocMachines.Add(new Machine() { Mnr = pair.Key, Name = pair.Value });
-      }
-      DataGridMachines.ItemsSource = ocMachines;
-
-      MachineQuantityMax = DataGridMachines.Items.Count;      // переопределяется по фактическому наличию
-
-      // Популируем таблицу DataGridStates1
-      // DataGridStates.ItemsSource = State.GetStates();
-      xmlReader = XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + "Custom\\StatesSequence.xml");
-      root = XElement.Load(xmlReader);
-      IEnumerable<XElement> stateMsDelays = root.Elements("StateMsDelay");
-      var ocStateMsDelays = new ObservableCollection<State>();
-      foreach (XElement stateMsDelay in stateMsDelays)
-      {
-        int.TryParse(stateMsDelay.FirstAttribute.Value, out i);
-        int.TryParse(stateMsDelay.Value, out i2);
-        ocStateMsDelays.Add(new State() { Status = i, MsDelay = i2 });
-      }
-      DataGridStates.ItemsSource = ocStateMsDelays;
+      LoadMachines();
+      LoadStates()
 
       // Заполним словарь состояний (StatesHashtable)
       xmlReader = XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + "Custom\\States.xml");
@@ -119,6 +95,50 @@ namespace WPF_AIPStressTesting01
         s.Designation = StatesHashtable.Contains(s.Status) ? StatesHashtable[s.Status].ToString() : s.Status.ToString();
       }
 
+    }
+
+    private void LoadStates()
+    {
+      XmlReader xmlReader;
+      XElement root;
+      int i, i2;
+
+      // Популируем таблицу DataGridStates
+      // DataGridStates.ItemsSource = State.GetStates();
+      xmlReader = XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + "Custom\\StatesSequence.xml");
+      root = XElement.Load(xmlReader);
+      IEnumerable<XElement> stateMsDelays = root.Elements("StateMsDelay");
+      var ocStateMsDelays = new ObservableCollection<State>();
+      foreach (XElement stateMsDelay in stateMsDelays)
+      {
+        int.TryParse(stateMsDelay.FirstAttribute.Value, out i);
+        int.TryParse(stateMsDelay.Value, out i2);
+        ocStateMsDelays.Add(new State() { Status = i, MsDelay = i2 });
+      }
+      DataGridStates.ItemsSource = ocStateMsDelays;
+    }
+    private void LoadMachines()
+    {
+      // Популируем таблицу DataGridMachines
+
+      XmlReader xmlReader;
+      XElement root;
+
+      //DataGridMachines.ItemsSource = Machine.GetMachines();
+      xmlReader = XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + "Custom\\Machines.xml");
+      root = XElement.Load(xmlReader);
+      IEnumerable<XElement> machines = root.Elements("machine");
+      Dictionary<string, string> machinesMap = machines.ToDictionary(
+      element => element.Attribute("mnr").Value, // Key selector
+      element => element.Value);
+      var ocMachines = new ObservableCollection<Machine>();
+      foreach (KeyValuePair<string, string> pair in machinesMap)
+      {
+        ocMachines.Add(new Machine() { Mnr = pair.Key, Name = pair.Value });
+      }
+      DataGridMachines.ItemsSource = ocMachines;
+
+      MachineQuantityMax = DataGridMachines.Items.Count;      // переопределяется по фактическому наличию
     }
 
     // ButtonSpinner SpinnerMachineQuantity
@@ -342,13 +362,21 @@ namespace WPF_AIPStressTesting01
       ButtonStop.IsEnabled = true;
     }
 
+    private volatile bool _buttonStopProcessed;
     private void ButtonStop_Click(object sender, RoutedEventArgs e)
     {
+      _buttonStopProcessed = false;
+
+      Cursor cursor = this.Cursor;
+      this.Cursor = Cursors.Wait;
       _threadStarted = false;
       ButtonStop.IsEnabled = false;
       _NestedEmptyMessageLoop();
       while (_thread != null && _thread.Join(2000)) { _thread.Interrupt(); _thread = null; }
       ButtonStart.IsEnabled = true;
+      this.Cursor = cursor;
+
+      _buttonStopProcessed = true;
     }
 
     // used functions
@@ -719,5 +747,44 @@ namespace WPF_AIPStressTesting01
         mtb.SelectionLength = selectionLength;
     }
 
+    private void CheckLoadMachinesFromDb_Click(object sender, RoutedEventArgs e)
+    {
+      Cursor cursor = this.Cursor;
+      if (_threadStarted)
+      {
+        mq = 1;
+        ButtonStop_Click(null, null);
+        while (!_buttonStopProcessed)
+        {
+          // ждём окончания обработки, вызванной по кнопке "Stop"
+        }
+        //Thread.Sleep(TimeSpan.FromSeconds(3));
+      }
+      var chk = (CheckBox)sender;
+      if (chk.IsChecked.Value)
+      {
+        // загружаем список машин из БД
+        this.Cursor = Cursors.Wait;
+        Table<maschinen> maschinen = db2.GetTable<maschinen>();
+        var ocMachines = new ObservableCollection<Machine>();
+        foreach (maschinen m in maschinen)
+        {
+          ocMachines.Add(new Machine() {Mnr = m.masch_nr, Name = m.bez_lang_18});
+        }
+        DataGridMachines.ItemsSource = ocMachines;
+        MachineQuantityMax = DataGridMachines.Items.Count;      // переопределяется по фактическому наличию
+      }
+      else
+      {
+        // загружаем список машин из Machines.xml
+        LoadMachines();
+      }
+      this.Cursor = cursor;
+      var txtBox = (TextBox)SpinnerMachineQuantity.Content;
+      int i;
+      int value = String.IsNullOrEmpty(txtBox.Text) || !int.TryParse(txtBox.Text, out i) ? 0 : Convert.ToInt32(txtBox.Text);
+      if (value > MachineQuantityMax)
+        txtBox.Text = MachineQuantityMax.ToString();
+    }
   }
 }

@@ -33,5 +33,16 @@ namespace WPF_AIPStressTesting01.Properties {
                 return ((string)(this["hypdmConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=MES8N\\HYDMS1;Initial Catalog=hydra1;Persist Security Info=True;User I" +
+            "D=sa;Password=hydadm")]
+        public string hydra1ConnectionString {
+            get {
+                return ((string)(this["hydra1ConnectionString"]));
+            }
+        }
     }
 }
