@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -1008,6 +1009,35 @@ namespace WPF_AIPStressTesting01
           CheckLoadStatesFromDb.IsChecked = true;
       }
       this.Cursor = cursor;
+    }
+
+    private void DataGridMachines_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+      if (_threadStarted)
+      {
+        // пока находимся в режиме стартовавшего тестирования, выбор в таблице станков запрещаем
+        if (dgmMouseOrKeyboardEventOnRow(e))
+          e.Handled = true;
+      }
+    }
+
+    private void DataGridMachines_PreviewGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+    {
+      if (_threadStarted)
+      {
+        if (dgmMouseOrKeyboardEventOnRow(e))
+          e.Handled = true;
+      }
+    }
+
+    private bool dgmMouseOrKeyboardEventOnRow(RoutedEventArgs e)
+    {
+      DependencyObject dep = (DependencyObject)e.OriginalSource;
+      while ((dep != null) && !(dep is DataGridCell) && !(dep is DataGridColumnHeader))
+      {
+        dep = VisualTreeHelper.GetParent(dep);
+      }
+      return (dep != null);
     }
 
   }
