@@ -5,11 +5,11 @@
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="machine_id" Type="System.String" DbType="NVarChar(20) NOT NULL" CanBeNull="false" />
       <Column Name="status" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="status_dt" Type="System.DateTime" DbType="SmallDateTime NOT NULL" CanBeNull="false" />
+      <Column Name="status_dt" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="progname" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="properties" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
       <Column Name="processed" Type="System.Byte" DbType="TinyInt NOT NULL" CanBeNull="false" />
-      <Column Name="processed_dt" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="processed_dt" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="ts" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
     </Type>
   </Table>

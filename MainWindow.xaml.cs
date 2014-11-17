@@ -472,6 +472,8 @@ namespace WPF_AIPStressTesting01
         return;
       }
 
+      DataGridMachines.UnselectAll();
+
       _thread = new Thread(Test);
       _threadStarted = true;
       _thread.Start();
@@ -658,17 +660,45 @@ namespace WPF_AIPStressTesting01
           //DataGridMachines.SelectedItem = DataGridMachines.Items[rowIdx];
           //Machine m = (Machine)DataGridMachines.SelectedItem;
           // DataGridMachines.Focus();
+
           DataGridMachines.CurrentItem = DataGridMachines.Items[rowIdx];
           Machine m = (Machine)DataGridMachines.CurrentItem;
+
           m.Status = state.Status;
           m.Designation = StatesHashtable.Contains(state.Status) ? StatesHashtable[state.Status].ToString() : m.Status.ToString();
           m.MsDelay = state.MsDelay;
           m.MsInStatus = 0;
-          // на мин.интервал времени меняем цвет фона (чтобы показать, что изменился статус) 
-          var row = DataGridMachines.ItemContainerGenerator.ContainerFromItem(m) as DataGridRow;
-          if (row != null)
-            row.Background = Brushes.LightSkyBlue;
+          // на мин.интервал времени меняем цвет фона (чтобы показать, что изменился статус)
+          // и делаем это только для видимых записей!
+          ScrollViewer scrollviewDataGridMachines = FindVisualChild<ScrollViewer>(DataGridMachines);
+          int visTopRowIdx = (int) scrollviewDataGridMachines.ContentVerticalOffset;
+          int visBotRowIdx = (int) (visTopRowIdx + scrollviewDataGridMachines.ViewportHeight + 1);
+          if (rowIdx >= visTopRowIdx && rowIdx <= visBotRowIdx)
+          {
+            var row = DataGridMachines.ItemContainerGenerator.ContainerFromItem(m) as DataGridRow;
+            if (row != null)
+              row.Background = Brushes.LightSkyBlue;
+          }
         });
+    }
+
+    public static T FindVisualChild<T>(DependencyObject depObj) where T : DependencyObject
+    {
+      if (depObj != null)
+      {
+        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+        {
+          DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+          if (child != null && child is T)
+          {
+            return (T)child;
+          }
+
+          T childItem = FindVisualChild<T>(child);
+          if (childItem != null) return childItem;
+        }
+      }
+      return null;
     }
 
     private volatile string _mnr;
@@ -979,5 +1009,6 @@ namespace WPF_AIPStressTesting01
       }
       this.Cursor = cursor;
     }
+
   }
 }
