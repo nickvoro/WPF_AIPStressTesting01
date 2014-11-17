@@ -858,7 +858,8 @@ namespace WPF_AIPStressTesting01
             double ssToDelayStep = MaxDelayForOneStep > ssToDelay ? ssToDelay : MaxDelayForOneStep;
             Thread.Sleep(TimeSpan.FromSeconds(ssToDelayStep));
             ssToDelay -= ssToDelayStep;
-            WDisp_gridForAllMachinesAddToMsInStatus((int)(MaxDelayForOneStep * 1000 / tsf));
+            //WDisp_gridForAllMachinesAddToMsInStatus((int)(MaxDelayForOneStep * 1000 / tsf));
+            WDisp_gridForAllMachinesAddToMsInStatus((int)(ssToDelayStep * 1000 / tsf));
           }
           // запоминаем момент времени (для коррекции следующей задержки)
           ticks = DateTime.Now.Ticks;
