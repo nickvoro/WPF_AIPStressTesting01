@@ -96,11 +96,11 @@
                    Text=")" />
                     <CheckBox Margin="25,0,5,0" VerticalAlignment="Center"
                           HorizontalAlignment="Left"
-                      Content="Load Machines From DB"
+                      Content="Load machines from DB"
                       Name="CheckLoadMachinesFromDb" Click="CheckLoadMachinesFromDb_Click" />
                     <CheckBox Margin="5,0" VerticalAlignment="Center"
                           HorizontalAlignment="Left"
-                      Content="Load States From DB"
+                      Content="Load states from DB"
                       Name="CheckLoadStatesFromDb" Click="CheckLoadStatesFromDb_Click" />
                 </StackPanel>
                 <DataGrid Grid.Column="0" Name="DataGridMachines"
