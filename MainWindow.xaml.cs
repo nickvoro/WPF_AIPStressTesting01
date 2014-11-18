@@ -1034,7 +1034,7 @@ namespace WPF_AIPStressTesting01
     private bool dgmMouseOrKeyboardEventOnRow(RoutedEventArgs e)
     {
       DependencyObject dep = (DependencyObject)e.OriginalSource;
-      while ((dep != null) && !(dep is DataGridCell) && !(dep is DataGridColumnHeader))
+      while ((dep != null) && !(dep is DataGridCell) && !(dep is DataGridColumnHeader) && !(dep is DataGridRowHeader))
       {
         dep = VisualTreeHelper.GetParent(dep);
       }
