@@ -33,6 +33,18 @@ namespace WPF_AIPStressTesting01
       }
     }
 
+    private int _seqStep;
+    public int SeqStep
+    {
+      get { return _seqStep; }
+      set
+      {
+        if (value == _seqStep) return;
+        _seqStep = value;
+        OnPropertyChanged("SeqStep");
+      }
+    }
+
     private int _status;
     public int Status
     {
