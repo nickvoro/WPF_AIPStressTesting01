@@ -448,6 +448,9 @@ namespace WPF_AIPStressTesting01
     {
       var rowCnt = e.Row.GetIndex() + 1;
       e.Row.Header = rowCnt.ToString();
+
+      if(Equals(e.Row.Background, Brushes.LightSkyBlue))
+        e.Row.Background = Brushes.White;
     }
 
     // DataGridStates
@@ -562,6 +565,7 @@ namespace WPF_AIPStressTesting01
     {
       this.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate()
       {
+        WDisp_RestoreMoreNotUsedMachines();
         mq = _MachineQuantity();
         tsf = _TimeScaleFactor();
       });
@@ -571,6 +575,7 @@ namespace WPF_AIPStressTesting01
     {
       this.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate()
       {
+        WDisp_RestoreMoreNotUsedMachines();
         mq = _MachineQuantity();
       });
     }
@@ -627,6 +632,34 @@ namespace WPF_AIPStressTesting01
           _machineQuantityNew = _MachineQuantity();
       });
       return _machineQuantityNew != mq;
+    }
+
+    private void WDisp_RestoreMoreNotUsedMachines()
+    {
+      this.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate()
+      {
+        _machineQuantityNew = _MachineQuantity();
+        if (_machineQuantityNew < mq)
+        {
+          // очистим состояние записей таблицы DataGridMachines за пределами нового количества тестируемых станков (_machineQuantityNew)
+          for (int i = _machineQuantityNew; i < mq; i++)
+          {
+            DataGridMachines.CurrentItem = DataGridMachines.Items[i];
+            Machine m = (Machine)DataGridMachines.CurrentItem;
+            m.MsDelay = 0;
+            m.MsInStatus = 0;
+            m.Status = 0;
+            m.Designation = "";
+
+            // если цвет фона изменённый (меняется при смене статуса) - восстанавливаем
+            var row = DataGridMachines.ItemContainerGenerator.ContainerFromItem(m) as DataGridRow;
+            if ((row != null) && Equals(row.Background, Brushes.LightSkyBlue))
+            {
+              row.Background = Brushes.White;
+            }
+          }
+        }
+      });
     }
 
     private bool WDisp_IsTimeScaleFactorChanged()
