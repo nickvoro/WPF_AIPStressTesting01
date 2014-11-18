@@ -142,19 +142,24 @@ namespace WPF_AIPStressTesting01
             m.ProcMessage = (string)mh2[m.Mnr];
           }
 
-          /*// если цвет фона изменённый (меняется при смене статуса) - восстанавливаем через мин.интервал времени
           var row = DataGridMachines.ItemContainerGenerator.ContainerFromItem(m) as DataGridRow;
-          if ((row != null) && Equals(row.Background, Brushes.LightSkyBlue))
+          if (row != null)
           {
-            //if (i%2 == 0)
-            //  row.Background = Brushes.White;
-            //else
-            //  row.Background = DataGridMachines.AlternatingRowBackground;
-            row.Background = Brushes.White;
-          }*/
-
+            if (m.ProcCode == (int)StatusProcessingType.ErrorOnSend)
+            {
+              // если возникла ошибка сервиса, то покажем строку красным фоном
+              if(!Equals(row.Background, Brushes.Red))
+                row.Background = Brushes.Red;
+            }
+            else if (Equals(row.Background, Brushes.Red))
+            {
+              // если ошибки нет, а строка была в красном фоне, то снимем этот красный фон (ошибка исчезла)
+              row.Background = Brushes.White;
+            }
+          }
         }
       });
+
     }
 
     private string padIP(string ip)
@@ -582,6 +587,8 @@ namespace WPF_AIPStressTesting01
       }
 
       Service_IntervalInit();
+      _serviceLastProcId = GetServiceLastProcId();
+
 
       DataGridMachines.UnselectAll();
 
@@ -758,9 +765,10 @@ namespace WPF_AIPStressTesting01
             m.Status = 0;
             m.Designation = "";
 
-            // если цвет фона изменённый (меняется при смене статуса) - восстанавливаем
+            // если цвет фона изменённый (меняется при смене статуса или при ошибке сервиса) - восстанавливаем
             var row = DataGridMachines.ItemContainerGenerator.ContainerFromItem(m) as DataGridRow;
-            if ((row != null) && Equals(row.Background, Brushes.LightSkyBlue))
+            //if ((row != null) && Equals(row.Background, Brushes.LightSkyBlue))
+            if ((row != null) && !Equals(row.Background, Brushes.White))
             {
               row.Background = Brushes.White;
             }
@@ -810,14 +818,14 @@ namespace WPF_AIPStressTesting01
           m.MsDelay = state.MsDelay;
           m.MsInStatus = 0;
           // на мин.интервал времени меняем цвет фона (чтобы показать, что изменился статус)
-          // и делаем это только для видимых записей!
+          // и делаем это только для видимых записей, не имеющих кода ошибки после обработки сервисом!
           ScrollViewer scrollviewDataGridMachines = FindVisualChild<ScrollViewer>(DataGridMachines);
           int visTopRowIdx = (int) scrollviewDataGridMachines.ContentVerticalOffset;
           int visBotRowIdx = (int) (visTopRowIdx + scrollviewDataGridMachines.ViewportHeight + 1);
           if (rowIdx >= visTopRowIdx && rowIdx <= visBotRowIdx)
           {
             var row = DataGridMachines.ItemContainerGenerator.ContainerFromItem(m) as DataGridRow;
-            if (row != null)
+            if (row != null && !Equals(row.Background, Brushes.Red))
               row.Background = Brushes.LightSkyBlue;
           }
         });
