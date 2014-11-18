@@ -1200,5 +1200,10 @@ namespace WPF_AIPStressTesting01
       return (dep != null);
     }
 
+    private void DataGridStates_Sorting(object sender, DataGridSortingEventArgs e)
+    {
+      e.Handled = true;
+    }
+
   }
 }
