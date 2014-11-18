@@ -70,15 +70,42 @@ namespace WPF_AIPStressTesting01
     }
 
     private int _ms_in_status;
+
     public int MsInStatus
     {
       get { return _ms_in_status; }
       set
       {
         if (value == _ms_in_status) return;
-        _ms_in_status = value; ;
+        _ms_in_status = value;
+        ;
         OnPropertyChanged("MsInStatus");
       }
+    }
+
+    private int _proc_code;
+    public int ProcCode
+    {
+      get { return _proc_code; }
+      set
+      {
+        if (value == _proc_code) return;
+        _proc_code = value;
+        ;
+        OnPropertyChanged("ProcCode");
+      }
+    }
+
+    private string _proc_message;
+    public string ProcMessage
+    {
+        get { return _proc_message; }
+        set
+        {
+            if (value == _proc_message) return;
+            _proc_message = value;
+            OnPropertyChanged("ProcMessage");
+        }
     }
 
 /*

@@ -30,6 +30,9 @@ namespace WPF_AIPStressTesting01
 		
     #region Extensibility Method Definitions
     partial void OnCreated();
+    partial void InsertSvcParam(SvcParam instance);
+    partial void UpdateSvcParam(SvcParam instance);
+    partial void DeleteSvcParam(SvcParam instance);
     partial void Insertm_statuse(m_statuse instance);
     partial void Updatem_statuse(m_statuse instance);
     partial void Deletem_statuse(m_statuse instance);
@@ -65,11 +68,177 @@ namespace WPF_AIPStressTesting01
 			OnCreated();
 		}
 		
+		public System.Data.Linq.Table<SvcParam> SvcParams
+		{
+			get
+			{
+				return this.GetTable<SvcParam>();
+			}
+		}
+		
 		public System.Data.Linq.Table<m_statuse> m_statuses
 		{
 			get
 			{
 				return this.GetTable<m_statuse>();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.SvcParams")]
+	public partial class SvcParam : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _Id;
+		
+		private string _Host;
+		
+		private string _Instance;
+		
+		private string _Name;
+		
+		private string _Value;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnHostChanging(string value);
+    partial void OnHostChanged();
+    partial void OnInstanceChanging(string value);
+    partial void OnInstanceChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnValueChanging(string value);
+    partial void OnValueChanged();
+    #endregion
+		
+		public SvcParam()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Host", DbType="NVarChar(20) NOT NULL", CanBeNull=false)]
+		public string Host
+		{
+			get
+			{
+				return this._Host;
+			}
+			set
+			{
+				if ((this._Host != value))
+				{
+					this.OnHostChanging(value);
+					this.SendPropertyChanging();
+					this._Host = value;
+					this.SendPropertyChanged("Host");
+					this.OnHostChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Instance", DbType="NVarChar(20) NOT NULL", CanBeNull=false)]
+		public string Instance
+		{
+			get
+			{
+				return this._Instance;
+			}
+			set
+			{
+				if ((this._Instance != value))
+				{
+					this.OnInstanceChanging(value);
+					this.SendPropertyChanging();
+					this._Instance = value;
+					this.SendPropertyChanged("Instance");
+					this.OnInstanceChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Value", DbType="NVarChar(1000)")]
+		public string Value
+		{
+			get
+			{
+				return this._Value;
+			}
+			set
+			{
+				if ((this._Value != value))
+				{
+					this.OnValueChanging(value);
+					this.SendPropertyChanging();
+					this._Value = value;
+					this.SendPropertyChanged("Value");
+					this.OnValueChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
 	}
@@ -98,6 +267,8 @@ namespace WPF_AIPStressTesting01
 		
 		private System.Data.Linq.Binary _ts;
 		
+		private string _error_msg;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -120,6 +291,8 @@ namespace WPF_AIPStressTesting01
     partial void Onprocessed_dtChanged();
     partial void OntsChanging(System.Data.Linq.Binary value);
     partial void OntsChanged();
+    partial void Onerror_msgChanging(string value);
+    partial void Onerror_msgChanged();
     #endregion
 		
 		public m_statuse()
@@ -303,6 +476,26 @@ namespace WPF_AIPStressTesting01
 					this._ts = value;
 					this.SendPropertyChanged("ts");
 					this.OntsChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_error_msg", DbType="NChar(100)", UpdateCheck=UpdateCheck.Never)]
+		public string error_msg
+		{
+			get
+			{
+				return this._error_msg;
+			}
+			set
+			{
+				if ((this._error_msg != value))
+				{
+					this.Onerror_msgChanging(value);
+					this.SendPropertyChanging();
+					this._error_msg = value;
+					this.SendPropertyChanged("error_msg");
+					this.Onerror_msgChanged();
 				}
 			}
 		}

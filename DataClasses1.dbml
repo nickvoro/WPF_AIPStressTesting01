@@ -1,5 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="hypdm" Class="DataClasses1DataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Connection Mode="AppSettings" ConnectionString="Data Source=MES8N\HYDMS1;Initial Catalog=hypdm;Persist Security Info=True;User ID=mstatus_manager" SettingsObjectName="WPF_AIPStressTesting01.Properties.Settings" SettingsPropertyName="hypdmConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.SvcParams" Member="SvcParams">
+    <Type Name="SvcParam">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Host" Type="System.String" DbType="NVarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="Instance" Type="System.String" DbType="NVarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Value" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
+    </Type>
+  </Table>
   <Table Name="dbo.m_statuses" Member="m_statuses">
     <Type Name="m_statuse">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -11,6 +20,7 @@
       <Column Name="processed" Type="System.Byte" DbType="TinyInt NOT NULL" CanBeNull="false" />
       <Column Name="processed_dt" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="ts" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
+      <Column Name="error_msg" Type="System.String" DbType="NChar(100)" CanBeNull="true" />
     </Type>
   </Table>
 </Database>
