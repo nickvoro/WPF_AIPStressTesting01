@@ -109,6 +109,7 @@ namespace WPF_AIPStressTesting01
     }
     private void WDisp_Service_MapNextResults()
     {
+      //db.Refresh(System.Data.Linq.RefreshMode.KeepChanges, db.m_statuses);
       IEnumerable<m_statuse> states = from s in db.m_statuses where s.id > _serviceLastProcId && s.processed != (int)StatusProcessingType.NotProcessed select s;
       if (states.Count() == 0)
         return;
@@ -160,6 +161,23 @@ namespace WPF_AIPStressTesting01
         }
       });
 
+    }
+    private void WDisp_Service_ResetErrorBackColor()
+    {
+      this.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate()
+      {
+        for (int i = 0; i < mq; i++)
+        {
+          DataGridMachines.CurrentItem = DataGridMachines.Items[i];
+          Machine m = (Machine)DataGridMachines.CurrentItem;
+          var row = DataGridMachines.ItemContainerGenerator.ContainerFromItem(m) as DataGridRow;
+          if (row != null && Equals(row.Background, Brushes.Red))
+          {
+            // если строка была подсвечена красным как ошибка, то снимем этот красный фон
+            row.Background = Brushes.White;
+          }
+        }
+      });
     }
 
     private string padIP(string ip)
@@ -586,6 +604,8 @@ namespace WPF_AIPStressTesting01
         return;
       }
 
+      WDisp_Service_ResetErrorBackColor();
+      
       Service_IntervalInit();
       _serviceLastProcId = GetServiceLastProcId();
 
@@ -1066,10 +1086,12 @@ namespace WPF_AIPStressTesting01
               break;
           }
 
+          if (!_threadStarted) break;
           if (Service_IsIntervalExpired())
           {
             Service_IntervalInit();
-            WDisp_Service_MapNextResults();
+            if (!WDisp_IsCheckSupressDBactionsChecked())
+              WDisp_Service_MapNextResults();
           }
 
           Array.Sort(stateIdx);
@@ -1203,6 +1225,12 @@ namespace WPF_AIPStressTesting01
     private void DataGridStates_Sorting(object sender, DataGridSortingEventArgs e)
     {
       e.Handled = true;
+    }
+
+    private void CheckSupressDBactions_Checked(object sender, RoutedEventArgs e)
+    {
+      if (_threadStarted)
+        WDisp_Service_ResetErrorBackColor();
     }
 
   }

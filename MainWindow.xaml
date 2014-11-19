@@ -57,7 +57,7 @@
             </xctk:ButtonSpinner>
             <CheckBox Margin="100,0" VerticalAlignment="Center"
                       Content="Supress DB actions (do not send status commands to ddcom)" HorizontalAlignment="Right"
-                      Name="CheckSupressDBactions"/>
+                      Name="CheckSupressDBactions" Checked="CheckSupressDBactions_Checked" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" Grid.Row="1" Background="DarkGray">
             <TextBlock Margin="5"
