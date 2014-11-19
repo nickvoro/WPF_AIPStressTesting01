@@ -120,6 +120,19 @@ namespace WPF_AIPStressTesting01
         }
     }
 
+    private int _proc_id;
+    public int ProcId
+    {
+      get { return _proc_id; }
+      set
+      {
+        if (value == _proc_id) return;
+        _proc_id = value;
+        ;
+        OnPropertyChanged("ProcId");
+      }
+    }
+
 /*
     public static ObservableCollection<Machine> GetMachines()
     {

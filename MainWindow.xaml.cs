@@ -110,22 +110,28 @@ namespace WPF_AIPStressTesting01
     private void WDisp_Service_MapNextResults()
     {
       //db.Refresh(System.Data.Linq.RefreshMode.KeepChanges, db.m_statuses);
+      // кэширование покроем пересозданием контекста
+      db.Dispose();
+      db = new DataClasses1DataContext();
       IEnumerable<m_statuse> states = from s in db.m_statuses where s.id > _serviceLastProcId && s.processed != (int)StatusProcessingType.NotProcessed select s;
       if (states.Count() == 0)
         return;
       Hashtable mh = new Hashtable();
       Hashtable mh2 = new Hashtable();
+      Hashtable mh3 = new Hashtable();
       foreach (m_statuse s in states)
       {
         if (mh.Contains(s.machine_id))
         {
           mh[s.machine_id] = (int)s.processed;
           mh2[s.machine_id] = s.error_msg;
+          mh3[s.machine_id] = s.id;
         }
         else
         {
           mh.Add(s.machine_id, (int)s.processed);
           mh2.Add(s.machine_id, s.error_msg);
+          mh3.Add(s.machine_id, s.id);
 
           _serviceLastProcId = s.id;
         }
@@ -141,6 +147,7 @@ namespace WPF_AIPStressTesting01
           {
             m.ProcCode = (int)mh[m.Mnr];
             m.ProcMessage = (string)mh2[m.Mnr];
+            m.ProcId = (int)mh3[m.Mnr];
           }
 
           var row = DataGridMachines.ItemContainerGenerator.ContainerFromItem(m) as DataGridRow;
@@ -149,10 +156,10 @@ namespace WPF_AIPStressTesting01
             if (m.ProcCode == (int)StatusProcessingType.ErrorOnSend)
             {
               // если возникла ошибка сервиса, то покажем строку красным фоном
-              if(!Equals(row.Background, Brushes.Red))
-                row.Background = Brushes.Red;
+              if(!Equals(row.Background, Brushes.Salmon))
+                row.Background = Brushes.Salmon;
             }
-            else if (Equals(row.Background, Brushes.Red))
+            else if (Equals(row.Background, Brushes.Salmon))
             {
               // если ошибки нет, а строка была в красном фоне, то снимем этот красный фон (ошибка исчезла)
               row.Background = Brushes.White;
@@ -171,7 +178,7 @@ namespace WPF_AIPStressTesting01
           DataGridMachines.CurrentItem = DataGridMachines.Items[i];
           Machine m = (Machine)DataGridMachines.CurrentItem;
           var row = DataGridMachines.ItemContainerGenerator.ContainerFromItem(m) as DataGridRow;
-          if (row != null && Equals(row.Background, Brushes.Red))
+          if (row != null && Equals(row.Background, Brushes.Salmon))
           {
             // если строка была подсвечена красным как ошибка, то снимем этот красный фон
             row.Background = Brushes.White;
@@ -847,7 +854,7 @@ namespace WPF_AIPStressTesting01
           if (rowIdx >= visTopRowIdx && rowIdx <= visBotRowIdx)
           {
             var row = DataGridMachines.ItemContainerGenerator.ContainerFromItem(m) as DataGridRow;
-            if (row != null && !Equals(row.Background, Brushes.Red))
+            if (row != null && !Equals(row.Background, Brushes.Salmon))
               row.Background = Brushes.LightSkyBlue;
           }
         });
