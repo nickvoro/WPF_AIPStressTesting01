@@ -59,7 +59,7 @@
                       Content="Supress DB actions (do not send status commands to ddcom)" HorizontalAlignment="Right"
                       Name="CheckSupressDBactions" Checked="CheckSupressDBactions_Checked" />
         </StackPanel>
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Background="DarkGray">
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Background="DarkGray" Visibility="Hidden" Height="0">
             <TextBlock Margin="5"
                    HorizontalAlignment="Right"
                    Name="Tmp4"
@@ -69,11 +69,11 @@
                    HorizontalAlignment="Right"
                    Name="TextHydraHost"
                    Text="Host"
-                   VerticalAlignment="Center" />
+                   VerticalAlignment="Center" Visibility="Visible" />
             <xctk:MaskedTextBox x:Name="TextBoxHydraHost"
                              MinWidth="95" Height="20" Margin="5"
                              Mask="000\.000\.000\.000"
-                             ValueDataType="{x:Type s:String}" InsertKeyMode="Overwrite" KeyUp="TextBoxHydraHost_KeyUp" />
+                             ValueDataType="{x:Type s:String}" InsertKeyMode="Overwrite" KeyUp="TextBoxHydraHost_KeyUp" Visibility="Visible" />
         </StackPanel>
         <StackPanel Grid.Row="2" Orientation="Horizontal" Background="PowderBlue">
             <StackPanel Orientation="Vertical">
