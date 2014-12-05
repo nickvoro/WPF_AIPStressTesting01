@@ -24,7 +24,7 @@
                    Text="Machine quantity"
                    VerticalAlignment="Center" />
             <xctk:ButtonSpinner Margin="5"
-                            Height="22"
+                            Height="25"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             KeyDown="SpinnerMachineQuantity_KeyDown"
@@ -45,7 +45,7 @@
                    VerticalAlignment="Center" />
             <xctk:ButtonSpinner Margin="5"
                             Name="SpinnerTimeScaleFactor"
-                            Height="22"
+                            Height="25"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center" Spin="SpinnerTimeScaleFactor_Spin" KeyDown="SpinnerTimeScaleFactor_KeyDown" KeyUp="SpinnerTimeScaleFactor_KeyUp">
                 <TextBox Text="1"
@@ -53,7 +53,7 @@
                      HorizontalContentAlignment="Right"
                      VerticalAlignment="Center"
                      VerticalContentAlignment="Center"
-                     Name="TextBoxTimeScaleFactor" />
+                     Name="TextBoxTimeScaleFactor" Height="Auto" />
             </xctk:ButtonSpinner>
             <CheckBox Margin="100,0" VerticalAlignment="Center"
                       Content="Supress DB actions (do not send status commands to ddcom)" HorizontalAlignment="Right"
