@@ -16,7 +16,7 @@
             <TextBlock Margin="5"
                    HorizontalAlignment="Right"
                    Name="Tmp2"
-                   Text="Test parameters: "
+                   Text="Parameters: "
                    VerticalAlignment="Center" />
             <TextBlock Margin="5"
                    HorizontalAlignment="Right"
@@ -55,8 +55,28 @@
                      VerticalContentAlignment="Center"
                      Name="TextBoxTimeScaleFactor" Height="Auto" />
             </xctk:ButtonSpinner>
-            <CheckBox Margin="100,0" VerticalAlignment="Center"
-                      Content="Supress DB actions (do not send status commands to ddcom)" HorizontalAlignment="Right"
+            <TextBlock Margin="5"
+                   HorizontalAlignment="Right"
+                   Name="TextPrognameDelay"
+                   Text="Progname delay (sec)"
+                   VerticalAlignment="Center" />
+            <xctk:ButtonSpinner Margin="5"
+                            Height="25"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            KeyDown="SpinnerPrognameDelay_KeyDown"
+                            KeyUp="SpinnerPrognameDelay_KeyUp"
+                            Spin="SpinnerPrognameDelay_Spin"
+                            Name="SpinnerPrognameDelay">
+                <TextBox Text="1"
+                     IsReadOnly="False"
+                     HorizontalContentAlignment="Right"
+                     VerticalAlignment="Center"
+                     VerticalContentAlignment="Center"
+                     Name="TextBoxPrognameDelay" />
+            </xctk:ButtonSpinner>
+            <CheckBox Margin="20,0" VerticalAlignment="Center"
+                      Content="Supress DB actions (do not send status to ddcom)" HorizontalAlignment="Right"
                       Name="CheckSupressDBactions" Checked="CheckSupressDBactions_Checked" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" Grid.Row="1" Background="DarkGray" Visibility="Hidden" Height="0">

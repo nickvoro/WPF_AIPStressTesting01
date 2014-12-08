@@ -47,10 +47,12 @@ namespace WPF_AIPStressTesting01
     public const int MachineQuantityMaxConst = 100;
     public const int TimeScaleFactorMax = 1000;
     const double MaxDelayForOneStep = 1;
+    public const int PrognameDelayMaxConst = 1000000;
 
     private Thread _thread;
     private volatile bool _threadStarted;
     private int MachineQuantityMax = MachineQuantityMaxConst;
+    private int PrognameDelayMax = PrognameDelayMaxConst;
 
     public volatile Hashtable StatesHashtable;
 
@@ -404,7 +406,6 @@ namespace WPF_AIPStressTesting01
 
     // ButtonSpinner SpinnerMachineQuantity
     private volatile bool _smqInKeyProccessing;
-
     private void SpinnerMachineQuantity_Spin(object sender, SpinEventArgs e)
     {
       _smqInKeyProccessing = true;
@@ -428,7 +429,6 @@ namespace WPF_AIPStressTesting01
 
       _smqInKeyProccessing = false;
     }
-
     private void SpinnerMachineQuantity_KeyDown(object sender, KeyEventArgs e)
     {
       _smqInKeyProccessing = true;
@@ -447,7 +447,6 @@ namespace WPF_AIPStressTesting01
 
       _smqInKeyProccessing = false;
     }
-
     private void SpinnerMachineQuantity_KeyUp(object sender, KeyEventArgs e)
     {
       _smqInKeyProccessing = true;
@@ -483,9 +482,66 @@ namespace WPF_AIPStressTesting01
       _smqInKeyProccessing = false;
     }
 
+    // ButtonSpinner SpinnerPrognameDelay
+    private void SpinnerPrognameDelay_Spin(object sender, SpinEventArgs e)
+    {
+      var spinner = (ButtonSpinner)sender;
+      var txtBox = (TextBox)spinner.Content;
+      int i;
+      int value = String.IsNullOrEmpty(txtBox.Text) || !int.TryParse(txtBox.Text, out i) ? 0 : Convert.ToInt32(txtBox.Text);
+
+      if (e.Direction == SpinDirection.Increase)
+        value++;
+      else
+        value--;
+
+      if (value < 1)
+        value = 1;
+      else if (value > PrognameDelayMax)
+        value = PrognameDelayMax;
+
+      txtBox.Text = value.ToString();
+    }
+    private void SpinnerPrognameDelay_KeyDown(object sender, KeyEventArgs e)
+    {
+      const string rStr = "^(D|NumPad)[0-9]$";
+
+      if (e.Key == Key.Tab)
+        return;
+
+      var key = e.Key.ToString();
+      var r = new Regex(rStr, RegexOptions.IgnoreCase);
+      e.Handled = !r.IsMatch(key);
+    }
+    private void SpinnerPrognameDelay_KeyUp(object sender, KeyEventArgs e)
+    {
+      var spinner = (ButtonSpinner)sender;
+      var txtBox = (TextBox)spinner.Content;
+
+      if (String.IsNullOrEmpty(txtBox.Text))
+        return;
+
+      int i;
+      var value = !int.TryParse(txtBox.Text, out i) ? PrognameDelayMax : i;
+
+      if (value == 0 || value == PrognameDelayMax)
+      {
+        txtBox.Text = value.ToString();
+        return;
+      }
+
+      if (value < 1 || value > PrognameDelayMax)
+      {
+        if (value < 1)
+          value = 1;
+        else if (value > PrognameDelayMax)
+          value = PrognameDelayMax;
+        txtBox.Text = value.ToString();
+      }
+    }
+
     // ButtonSpinner SpinnerTimeScaleFactor
     private volatile bool _stsfInKeyProccessing;
-
     private void SpinnerTimeScaleFactor_Spin(object sender, SpinEventArgs e)
     {
       _stsfInKeyProccessing = true;
@@ -522,7 +578,6 @@ namespace WPF_AIPStressTesting01
 
       _stsfInKeyProccessing = false;
     }
-
     private void SpinnerTimeScaleFactor_KeyDown(object sender, KeyEventArgs e)
     {
       _stsfInKeyProccessing = true;
@@ -544,7 +599,6 @@ namespace WPF_AIPStressTesting01
 
       _stsfInKeyProccessing = false;
     }
-
     private void SpinnerTimeScaleFactor_KeyUp(object sender, KeyEventArgs e)
     {
       _stsfInKeyProccessing = true;
