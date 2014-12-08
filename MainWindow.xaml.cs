@@ -79,7 +79,6 @@ namespace WPF_AIPStressTesting01
     }
 
     private long _serviceTicks;
-
     private int GetServiceTimerInterval()
     {
       int serviceTimerInterval = 0;
@@ -114,7 +113,7 @@ namespace WPF_AIPStressTesting01
     private bool Service_IsIntervalExpired()
     {
       TimeSpan timeSpan = TimeSpan.FromTicks(DateTime.Now.Ticks - _serviceTicks);
-      int seconds = timeSpan.Seconds;
+      int seconds = (int)timeSpan.TotalSeconds;
       return seconds >= _serviceTimerInterval;
     }
     private void WDisp_Service_MapNextResults()
@@ -195,6 +194,40 @@ namespace WPF_AIPStressTesting01
           }
         }
       });
+    }
+
+    private long _prognameTicks;
+    private bool _bPrognameWaitNeedStatus;
+    private string _prognameTemplate = "/_N_WKS_DIR/_N_STRESS_TEST_AUTOGENNAME_~_MPF";
+    static Random rnd = new Random();
+    private int _prognameNumber = rnd.Next(1, 10000);
+    private void PrognameDelay_Start()
+    {
+      _prognameTicks = DateTime.Now.Ticks;
+      _bPrognameWaitNeedStatus = false;
+    }
+    private void PrognameDelay_TestIntervalExpired()
+    {
+      if (_bPrognameWaitNeedStatus)
+        return;
+
+      int secVal = WDisp_GetPrognameDelay();
+      if (secVal <= 0)
+        return;
+
+      TimeSpan timeSpan = TimeSpan.FromTicks(DateTime.Now.Ticks - _prognameTicks);
+      int seconds = (int)timeSpan.TotalSeconds;
+      if (seconds >= secVal)
+        _bPrognameWaitNeedStatus = true;
+    }
+    private bool PrognameDelay_IsIntervalExpired()
+    {
+      return _bPrognameWaitNeedStatus;
+    }
+    private string GenerateNextProgname()
+    {
+      _prognameNumber++;
+      return _prognameTemplate.Replace("~", _prognameNumber.ToString());
     }
 
     private string padIP(string ip)
@@ -678,6 +711,7 @@ namespace WPF_AIPStressTesting01
       Service_IntervalInit();
       _serviceLastProcId = GetServiceLastProcId();
 
+      PrognameDelay_Start();
 
       DataGridMachines.UnselectAll();
 
@@ -747,6 +781,14 @@ namespace WPF_AIPStressTesting01
       var value = !double.TryParse(txtBox.Text, out d) ? 0 : d;
       return value;
     }
+    private int _PrognameDelay()
+    {
+      var spinner = SpinnerPrognameDelay;
+      var txtBox = (TextBox)spinner.Content;
+      int i;
+      var value = !int.TryParse(txtBox.Text, out i) ? 0 : i;
+      return value;
+    }
 
     private volatile ItemCollection machineItemCollection;
     private volatile ItemCollection stateItemCollection;
@@ -763,7 +805,6 @@ namespace WPF_AIPStressTesting01
         sq = DataGridStates.Items.Count;
       });
     }
-
     private void WDisp_GetData1()
     {
       this.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate()
@@ -774,6 +815,16 @@ namespace WPF_AIPStressTesting01
       });
     }
 
+    private int _pd;
+    private int WDisp_GetPrognameDelay()
+    {
+      this.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate()
+      {
+        _pd = _PrognameDelay();
+      });
+      return _pd;
+    }
+
     private void WDisp_GetMachineQuantity()
     {
       this.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate()
@@ -782,7 +833,6 @@ namespace WPF_AIPStressTesting01
         mq = _MachineQuantity();
       });
     }
-
     private void WDisp_GetTimeScaleFactor()
     {
       this.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate()
@@ -1005,29 +1055,41 @@ namespace WPF_AIPStressTesting01
       });
     }
 
-    private long make3(int machineIdx, int stateIdx, int msDelay)
+    private long make3(int machineIdx, int stateIdx, int msDelay, bool PrognameSetPar, bool PrognameSetNow)
     {
       //return machineIdx + 1000 * stateIdx + (long)1000000 * msDelay;
-      long l = (((long)msDelay) << 22) + ((long)stateIdx << 9) + machineIdx;
+      //long l = (((long)msDelay) << 22) + ((long)stateIdx << 9) + machineIdx;
+      long l = (((long)msDelay) << 24) + ((long)stateIdx << 11) + ((long)machineIdx << 2) + (PrognameSetPar ? 2 : 0) + (PrognameSetNow ? 1 : 0);
       return l;
     }
     private int MachineIdxFrom3(long l3)
     {
       //return (int)(l3 % 1000);
-      int i = (int) (l3 & 0x1FF);
+      //int i = (int) (l3 & 0x1FF);
+      int i = (int)((l3 >> 2) & 0x1FF);
       return i;
     }
     private int StateIdxFrom3(long l3)
     {
       //return (int)((l3 % 1000000) / 1000);
-      int i = (int) ((l3 >> 9) & 0x1FFF);
+      //int i = (int) ((l3 >> 9) & 0x1FFF);
+      int i = (int)((l3 >> 11) & 0x1FFF);
       return i;
     }
     private int MsDelayFrom3(long l3)
     {
       //return (int)(l3 / 1000000);
-      int i = (int)((l3 >> 22) & 0x000003FFFFFFFFFF);
+      //int i = (int)((l3 >> 22) & 0x000003FFFFFFFFFF);
+      int i = (int)((l3 >> 24) & 0x000003FFFFFFFFFF);
       return i;
+    }
+    private bool GetBool_PrognameSetParFrom3(long l3)
+    {
+      return (l3 & 2) == 2;
+    }
+    private bool GetBool_PrognameSetNowFrom3(long l3)
+    {
+      return (l3 & 1) == 1;
     }
 
     private void Test()
@@ -1049,7 +1111,7 @@ namespace WPF_AIPStressTesting01
         for (int i = 0; i < mq; i++)
         {
           var stateItem = (State)stateItemCollection[j];
-          stateIdx[i] = make3(i, j, stateItem.MsDelay);
+          stateIdx[i] = make3(i, j, stateItem.MsDelay, false, false);
           WDisp_gridSetMachineStatus(i, (State)stateItem, j);   // в таблице установим новый статус
           j++;
           if (j >= sq)
@@ -1070,7 +1132,9 @@ namespace WPF_AIPStressTesting01
           // для всех элементов в массиве stateIdx вычтем минимальную задержку
           for (int i = 0; i < mq; i++)
           {
-            stateIdx[i] = make3(MachineIdxFrom3(stateIdx[i]), StateIdxFrom3(stateIdx[i]), MsDelayFrom3(stateIdx[i]) - d);
+            bool boolPrognameSetParFrom3 = GetBool_PrognameSetParFrom3(stateIdx[i]);
+            bool boolPrognameSetNowFrom3 = GetBool_PrognameSetNowFrom3(stateIdx[i]);
+            stateIdx[i] = make3(MachineIdxFrom3(stateIdx[i]), StateIdxFrom3(stateIdx[i]), MsDelayFrom3(stateIdx[i]) - d, boolPrognameSetParFrom3, boolPrognameSetNowFrom3);
           }
 
           if (!_threadStarted)
@@ -1117,6 +1181,8 @@ namespace WPF_AIPStressTesting01
           if (WDisp_IsMachineQuantityChanged())
             break;
 
+          PrognameDelay_TestIntervalExpired();  // установим флаг необходимости послать имя УП
+
           // для первых эелементов массива, у которых задержка стала = 0, отрабатываем команду
           // и прописываем следующее состояние
           for (int i = 0; i < mq; i++)
@@ -1124,6 +1190,8 @@ namespace WPF_AIPStressTesting01
             int m1 = MachineIdxFrom3(stateIdx[i]);
             int s1 = StateIdxFrom3(stateIdx[i]);
             int d1 = MsDelayFrom3(stateIdx[i]);
+            bool boolPrognameSetParFrom3 = GetBool_PrognameSetParFrom3(stateIdx[i]);
+            bool boolPrognameSetNowFrom3 = GetBool_PrognameSetNowFrom3(stateIdx[i]);
 
             if (d1 == 0)
             {
@@ -1131,6 +1199,7 @@ namespace WPF_AIPStressTesting01
                 break;
 
               // шлём команду на сервер (= добавление записи в таблицу БД dbo.m_statuses)
+              int sts = WDisp_gridGetStateId(s1);
               if (!WDisp_IsCheckSupressDBactionsChecked())
               {
                 try
@@ -1138,8 +1207,14 @@ namespace WPF_AIPStressTesting01
                   m_statuse mst = new m_statuse();
                   mst.id = 0;
                   mst.machine_id = WDisp_gridGetMachineId(m1);
-                  mst.status = WDisp_gridGetStateId(s1);
+                  mst.status = sts;
                   mst.status_dt = DateTime.Now;
+                  if (boolPrognameSetNowFrom3)
+                  {
+                    // зададим имя УП
+                    mst.progname = GenerateNextProgname();
+                    boolPrognameSetParFrom3 = false;
+                  }
                   db.m_statuses.InsertOnSubmit(mst);
                   db.SubmitChanges();
                 }
@@ -1156,7 +1231,8 @@ namespace WPF_AIPStressTesting01
               if (s1 >= sq)
                 s1 = 0;
               var stateItem = (State)stateItemCollection[s1];
-              stateIdx[i] = make3(m1, s1, stateItem.MsDelay);
+              // примечание: 7 это статус, всед за которым (в следующем статусе) надо выводить параметр имени управляющей программы (УП)
+              stateIdx[i] = make3(m1, s1, stateItem.MsDelay, boolPrognameSetParFrom3, boolPrognameSetParFrom3 && (sts == 7));
               WDisp_gridSetMachineStatus(m1, (State)stateItem, s1);   // в таблице установим новый статус
             }
             else
@@ -1164,11 +1240,27 @@ namespace WPF_AIPStressTesting01
           }
 
           if (!_threadStarted) break;
+
           if (Service_IsIntervalExpired())
           {
             Service_IntervalInit();
             if (!WDisp_IsCheckSupressDBactionsChecked())
               WDisp_Service_MapNextResults();
+          }
+
+          if (PrognameDelay_IsIntervalExpired())
+          {
+            // прописываем необходимость задать новое имя УП
+            for (int i = 0; i < mq; i++)
+            {
+              int m1 = MachineIdxFrom3(stateIdx[i]);
+              int s1 = StateIdxFrom3(stateIdx[i]);
+              int d1 = MsDelayFrom3(stateIdx[i]);
+              bool boolPrognameSetParFrom3 = GetBool_PrognameSetParFrom3(stateIdx[i]);
+              if (!boolPrognameSetParFrom3)
+                stateIdx[i] = make3(m1, s1, d1, true, false);
+            }
+            PrognameDelay_Start();  // интервал инициируем на новый цикл отсчёта
           }
 
           Array.Sort(stateIdx);
