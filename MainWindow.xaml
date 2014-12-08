@@ -68,7 +68,7 @@
                             KeyUp="SpinnerPrognameDelay_KeyUp"
                             Spin="SpinnerPrognameDelay_Spin"
                             Name="SpinnerPrognameDelay">
-                <TextBox Text="1"
+                <TextBox Text="0"
                      IsReadOnly="False"
                      HorizontalContentAlignment="Right"
                      VerticalAlignment="Center"

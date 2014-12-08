@@ -495,8 +495,8 @@ namespace WPF_AIPStressTesting01
       else
         value--;
 
-      if (value < 1)
-        value = 1;
+      if (value < 0)
+        value = 0;
       else if (value > PrognameDelayMax)
         value = PrognameDelayMax;
 
@@ -530,10 +530,10 @@ namespace WPF_AIPStressTesting01
         return;
       }
 
-      if (value < 1 || value > PrognameDelayMax)
+      if (value < 0 || value > PrognameDelayMax)
       {
-        if (value < 1)
-          value = 1;
+        if (value < 0)
+          value = 0;
         else if (value > PrognameDelayMax)
           value = PrognameDelayMax;
         txtBox.Text = value.ToString();
