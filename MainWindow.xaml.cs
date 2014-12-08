@@ -953,19 +953,27 @@ namespace WPF_AIPStressTesting01
 
     private long make3(int machineIdx, int stateIdx, int msDelay)
     {
-      return machineIdx + 1000 * stateIdx + (long)1000000 * msDelay;
+      //return machineIdx + 1000 * stateIdx + (long)1000000 * msDelay;
+      long l = (((long)msDelay) << 22) + ((long)stateIdx << 9) + machineIdx;
+      return l;
     }
     private int MachineIdxFrom3(long l3)
     {
-      return (int)(l3 % 1000);
+      //return (int)(l3 % 1000);
+      int i = (int) (l3 & 0x1FF);
+      return i;
     }
     private int StateIdxFrom3(long l3)
     {
-      return (int)((l3 % 1000000) / 1000);
+      //return (int)((l3 % 1000000) / 1000);
+      int i = (int) ((l3 >> 9) & 0x1FFF);
+      return i;
     }
     private int MsDelayFrom3(long l3)
     {
-      return (int)(l3 / 1000000);
+      //return (int)(l3 / 1000000);
+      int i = (int)((l3 >> 22) & 0x000003FFFFFFFFFF);
+      return i;
     }
 
     private void Test()
