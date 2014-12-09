@@ -1406,6 +1406,7 @@ namespace WPF_AIPStressTesting01
         while (!_buttonStopProcessed)
         {
           // ждём окончания обработки, вызванной по кнопке "Stop"
+          Thread.Sleep(TimeSpan.FromSeconds(.1));
         }
       }
       var chk = (CheckBox)sender;
