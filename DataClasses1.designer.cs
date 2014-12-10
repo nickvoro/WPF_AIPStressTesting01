@@ -37,7 +37,15 @@ namespace WPF_AIPStressTesting01
     partial void Updatem_statuse(m_statuse instance);
     partial void Deletem_statuse(m_statuse instance);
     #endregion
-		
+
+    [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.InsertMStatus")]
+    public int InsertMStatus([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] ref System.Nullable<int> id, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "NVarChar(20)")] string machine_id, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] System.Nullable<int> status, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "DateTime")] System.Nullable<System.DateTime> status_dt, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "NVarChar(50)")] string progname, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "NVarChar(1000)")] string properties, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "TinyInt")] System.Nullable<byte> processed, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "DateTime")] System.Nullable<System.DateTime> processed_dt, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "NVarChar(100)")] string error_msg)
+    {
+      IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), id, machine_id, status, status_dt, progname, properties, processed, processed_dt, error_msg);
+      id = ((System.Nullable<int>)(result.GetParameterValue(0)));
+      return ((int)(result.ReturnValue));
+    }
+
 		public DataClasses1DataContext() : 
 				base(global::WPF_AIPStressTesting01.Properties.Settings.Default.hypdmConnectionString, mappingSource)
 		{

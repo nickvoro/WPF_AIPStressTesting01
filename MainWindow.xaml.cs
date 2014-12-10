@@ -1204,19 +1204,26 @@ namespace WPF_AIPStressTesting01
               {
                 try
                 {
+                  /*
                   m_statuse mst = new m_statuse();
                   mst.id = 0;
                   mst.machine_id = WDisp_gridGetMachineId(m1);
                   mst.status = sts;
                   mst.status_dt = DateTime.Now;
+                  */
+                  string progname = string.Empty;
+                  string machineId = WDisp_gridGetMachineId(m1);
+                  int? retid = null;
                   if (boolPrognameSetNowFrom3)
                   {
                     // зададим имя УП
-                    mst.progname = GenerateNextProgname();
+                    //mst.progname = GenerateNextProgname();
+                    progname = GenerateNextProgname();
                     boolPrognameSetParFrom3 = false;
                   }
-                  db.m_statuses.InsertOnSubmit(mst);
-                  db.SubmitChanges();
+                  //db.m_statuses.InsertOnSubmit(mst);
+                  //db.SubmitChanges();
+                  db.InsertMStatus(ref retid, machineId, sts, DateTime.Now, progname, string.Empty, null, null, string.Empty);
                 }
                 catch (Exception ex)
                 {
