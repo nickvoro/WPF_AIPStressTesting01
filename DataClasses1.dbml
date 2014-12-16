@@ -1,16 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="hypdm" Class="DataClasses1DataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Connection Mode="AppSettings" ConnectionString="Data Source=MES8N\HYDMS1;Initial Catalog=hypdm;Persist Security Info=True;User ID=mstatus_manager" SettingsObjectName="WPF_AIPStressTesting01.Properties.Settings" SettingsPropertyName="hypdmConnectionString" Provider="System.Data.SqlClient" />
-  <Table Name="dbo.SvcParams" Member="SvcParams">
-    <Type Name="SvcParam">
-      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Host" Type="System.String" DbType="NVarChar(20) NOT NULL" CanBeNull="false" />
-      <Column Name="Instance" Type="System.String" DbType="NVarChar(20) NOT NULL" CanBeNull="false" />
-      <Column Name="Name" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
-      <Column Name="Value" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.m_statuses" Member="m_statuses">
-    <Type Name="m_statuse">
+  <Table Name="dbo.MachineStatuses" Member="MachineStatuses">
+    <Type Name="MachineStatuse">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="machine_id" Type="System.String" DbType="NVarChar(20) NOT NULL" CanBeNull="false" />
       <Column Name="status" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
@@ -20,7 +11,55 @@
       <Column Name="processed" Type="System.Byte" DbType="TinyInt NOT NULL" CanBeNull="false" />
       <Column Name="processed_dt" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="ts" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
-      <Column Name="error_msg" Type="System.String" DbType="NChar(100)" CanBeNull="true" />
+      <Column Name="comment" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.SvcParams" Member="SvcParams">
+    <Type Name="SvcParam">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Host" Type="System.String" DbType="NVarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="Instance" Type="System.String" DbType="NVarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Value" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
+      <Column Name="Comment" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Function Name="dbo.GetUnprocessedMStatuses" Method="GetUnprocessedMStatuses">
+    <ElementType Name="GetUnprocessedMStatusesResult">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="machine_id" Type="System.String" DbType="NVarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="status" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="status_dt" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="progname" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="properties" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
+      <Column Name="processed" Type="System.Byte" DbType="TinyInt NOT NULL" CanBeNull="false" />
+      <Column Name="processed_dt" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="comment" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.UpdateMStatus" Method="UpdateMStatus">
+    <Parameter Name="id" Type="System.Int32" DbType="Int" />
+    <Parameter Name="machine_id" Type="System.String" DbType="NVarChar(20)" />
+    <Parameter Name="status" Type="System.Int32" DbType="Int" />
+    <Parameter Name="status_dt" Type="System.DateTime" DbType="DateTime" />
+    <Parameter Name="progname" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="properties" Type="System.String" DbType="NVarChar(1000)" />
+    <Parameter Name="processed" Type="System.Byte" DbType="TinyInt" />
+    <Parameter Name="processed_dt" Type="System.DateTime" DbType="DateTime" />
+    <Parameter Name="comment" Type="System.String" DbType="NVarChar(100)" />
+    <Parameter Name="only_processed" Type="System.Byte" DbType="TinyInt" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.InsertMStatus" Method="InsertMStatus">
+    <Parameter Name="id" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="machine_id" Type="System.String" DbType="NVarChar(20)" />
+    <Parameter Name="status" Type="System.Int32" DbType="Int" />
+    <Parameter Name="status_dt" Type="System.DateTime" DbType="DateTime" />
+    <Parameter Name="progname" Type="System.String" DbType="NVarChar(50)" />
+    <Parameter Name="properties" Type="System.String" DbType="NVarChar(1000)" />
+    <Parameter Name="processed" Type="System.Byte" DbType="TinyInt" />
+    <Parameter Name="processed_dt" Type="System.DateTime" DbType="DateTime" />
+    <Parameter Name="comment" Type="System.String" DbType="NVarChar(100)" />
+    <Return Type="System.Int32" />
+  </Function>
 </Database>

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data.Linq;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -18,6 +19,7 @@ using System.Xml.Linq;
 using Xceed.Wpf.Toolkit;
 using System.Text.RegularExpressions;
 using MessageBox = Xceed.Wpf.Toolkit.MessageBox;
+using HyPDM;
 
 namespace WPF_AIPStressTesting01
 {
@@ -32,16 +34,16 @@ namespace WPF_AIPStressTesting01
       NotProcessed = 0,
       /// <summary>отложенная обработка</summary>
       NotProcessedIdle = 1,
-      NotProcessedWithPccDif = 2,
-      Processed = 3,
-      ProcessedTryPccDif = 4,
-      ProcessedWithPccDif = 5,
-      ProcessedWithoutPccDif = 6,
-      StatusExists = 7,
-      //StatusRewritten = 7,
-      StatusExpired = 8,
-      //StatusPccDifExpired = 9,
-      ErrorOnSend = 9
+      NotProcessedWithTerminal = 2,
+      TryProcess = 3,
+      TryProcessWithTerminal = 4,
+      Processed = 5,
+      ProcessedTryTerminal = 6,
+      ProcessedWithTerminal = 7,
+      ProcessedWithoutTerminal = 8,
+      StatusExists = 9,
+      StatusExpired = 10,
+      ErrorOnSend = 11
     }
 
     public const int MachineQuantityMaxConst = 100;
@@ -99,7 +101,7 @@ namespace WPF_AIPStressTesting01
       int serviceLastId = 0;
       try
       {
-        serviceLastId = db.m_statuses.Max(u => (int)u.id);
+        serviceLastId = db.MachineStatuses.Max(u => (int)u.id);
       }
       catch
       {
@@ -122,24 +124,24 @@ namespace WPF_AIPStressTesting01
       // кэширование покроем пересозданием контекста
       db.Dispose();
       db = new DataClasses1DataContext();
-      IEnumerable<m_statuse> states = from s in db.m_statuses where s.id > _serviceLastProcId && s.processed != (int)StatusProcessingType.NotProcessed select s;
+      IEnumerable<MachineStatuse> states = from s in db.MachineStatuses where s.id > _serviceLastProcId && s.processed != (int)StatusProcessingType.NotProcessed select s;
       if (states.Count() == 0)
         return;
       Hashtable mh = new Hashtable();
       Hashtable mh2 = new Hashtable();
       Hashtable mh3 = new Hashtable();
-      foreach (m_statuse s in states)
+      foreach (MachineStatuse s in states)
       {
         if (mh.Contains(s.machine_id))
         {
           mh[s.machine_id] = (int)s.processed;
-          mh2[s.machine_id] = s.error_msg;
+          mh2[s.machine_id] = s.comment;
           mh3[s.machine_id] = s.id;
         }
         else
         {
           mh.Add(s.machine_id, (int)s.processed);
-          mh2.Add(s.machine_id, s.error_msg);
+          mh2.Add(s.machine_id, s.comment);
           mh3.Add(s.machine_id, s.id);
 
           _serviceLastProcId = s.id;
@@ -433,6 +435,84 @@ namespace WPF_AIPStressTesting01
       {
         Mouse.OverrideCursor = null;
       }
+
+      return true;
+    }
+    
+    // пока не используется, т.к. возвращает "кривые" имена
+    // (требует наличия в пути dll-ек - ddcom32.dll, hyclnt32.dll, hyevcom.dll, hypdm32.dll, hyslb32.dll)
+    private bool LoadMachines_ddcom()
+    {
+      Mouse.OverrideCursor = Cursors.Wait;
+
+      // загружаем список машин из БД
+      this.Cursor = Cursors.Wait;
+
+      Dictionary<string, string> mnrDict = new Dictionary<string, string>();
+      #region по ddcom-у с сервера hydra получим список станков
+      // по ddcom-у с сервера hydra получим список станков (чтобы затем использовать, как критерий для фильтрации записей, зачитанных из таблицы dbo.machinen)
+      //string hydraHost = @"mes8z";
+      DDCom32 ddcom = DDCom32.Instance;
+      string connectionString = ConfigurationManager.ConnectionStrings["WPF_AIPStressTesting01.Properties.Settings.hydra1ConnectionString"].ConnectionString;
+      SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(connectionString);
+      string[] sstrs = builder.DataSource.Split('\\');
+      if (sstrs.Length > 0)
+      {
+        string hydraHost = sstrs[0];
+        short hydraUser = 3101;
+        string fileName = "_machine_list_tmp.txt";
+        string command = "DLG=MNR.LIST|DATEI=./spool/" + fileName + '|';
+        int ddcomResult = 0;
+        if (ddcom.Init(hydraHost, hydraUser) == 0)
+        {
+          ddcomResult = ddcom.DoCommand(ref command, false);
+          if (ddcomResult == 0)
+          {
+            //ddcomResult = ddcom.GetFile(fileName, fileName);
+            ddcomResult = ddcom.GetFile("./spool/" + fileName, AppDomain.CurrentDomain.BaseDirectory + fileName);
+            if (ddcomResult == 0)
+            {
+              int lineNumber = 0;
+              string line = string.Empty;
+              List<string> columns = null;
+              int mnrCol = 0;
+              int vabCol = 0;
+              using (StreamReader sr = new StreamReader(fileName))
+              {
+                while (!sr.EndOfStream)
+                {
+                  line = sr.ReadLine();
+                  lineNumber++;
+                  if (lineNumber == 1)
+                  {
+                    //заголовок
+                    columns = line.Split('|').Select(p => p.ToUpper()).ToList();
+                    mnrCol = columns.IndexOf("MNR");
+                    vabCol = columns.IndexOf("VAB");
+                  }
+                  else if (mnrCol >= 0 && vabCol >= 0)
+                  {
+                    columns = line.Split('|').ToList();
+                    mnrDict[columns.ElementAt(mnrCol)] = columns.ElementAt(vabCol);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      #endregion
+
+      var ocMachines = new ObservableCollection<Machine>();
+      foreach (var m in mnrDict)
+      {
+        ocMachines.Add(new Machine() { Mnr = m.Key, Name = m.Value });
+      }
+      DataGridMachines.ItemsSource = ocMachines;
+
+      MachineQuantityMax = DataGridMachines.Items.Count;      // переопределяется по фактическому наличию
+
+      Mouse.OverrideCursor = null;
 
       return true;
     }

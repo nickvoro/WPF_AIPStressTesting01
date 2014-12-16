@@ -30,22 +30,14 @@ namespace WPF_AIPStressTesting01
 		
     #region Extensibility Method Definitions
     partial void OnCreated();
+    partial void InsertMachineStatuse(MachineStatuse instance);
+    partial void UpdateMachineStatuse(MachineStatuse instance);
+    partial void DeleteMachineStatuse(MachineStatuse instance);
     partial void InsertSvcParam(SvcParam instance);
     partial void UpdateSvcParam(SvcParam instance);
     partial void DeleteSvcParam(SvcParam instance);
-    partial void Insertm_statuse(m_statuse instance);
-    partial void Updatem_statuse(m_statuse instance);
-    partial void Deletem_statuse(m_statuse instance);
     #endregion
-
-    [global::System.Data.Linq.Mapping.FunctionAttribute(Name = "dbo.InsertMStatus")]
-    public int InsertMStatus([global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] ref System.Nullable<int> id, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "NVarChar(20)")] string machine_id, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "Int")] System.Nullable<int> status, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "DateTime")] System.Nullable<System.DateTime> status_dt, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "NVarChar(50)")] string progname, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "NVarChar(1000)")] string properties, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "TinyInt")] System.Nullable<byte> processed, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "DateTime")] System.Nullable<System.DateTime> processed_dt, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType = "NVarChar(100)")] string error_msg)
-    {
-      IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), id, machine_id, status, status_dt, progname, properties, processed, processed_dt, error_msg);
-      id = ((System.Nullable<int>)(result.GetParameterValue(0)));
-      return ((int)(result.ReturnValue));
-    }
-
+		
 		public DataClasses1DataContext() : 
 				base(global::WPF_AIPStressTesting01.Properties.Settings.Default.hypdmConnectionString, mappingSource)
 		{
@@ -76,6 +68,14 @@ namespace WPF_AIPStressTesting01
 			OnCreated();
 		}
 		
+		public System.Data.Linq.Table<MachineStatuse> MachineStatuses
+		{
+			get
+			{
+				return this.GetTable<MachineStatuse>();
+			}
+		}
+		
 		public System.Data.Linq.Table<SvcParam> SvcParams
 		{
 			get
@@ -84,175 +84,31 @@ namespace WPF_AIPStressTesting01
 			}
 		}
 		
-		public System.Data.Linq.Table<m_statuse> m_statuses
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetUnprocessedMStatuses")]
+		public ISingleResult<GetUnprocessedMStatusesResult> GetUnprocessedMStatuses()
 		{
-			get
-			{
-				return this.GetTable<m_statuse>();
-			}
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())));
+			return ((ISingleResult<GetUnprocessedMStatusesResult>)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.UpdateMStatus")]
+		public int UpdateMStatus([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> id, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="NVarChar(20)")] string machine_id, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> status, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="DateTime")] System.Nullable<System.DateTime> status_dt, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="NVarChar(50)")] string progname, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="NVarChar(1000)")] string properties, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="TinyInt")] System.Nullable<byte> processed, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="DateTime")] System.Nullable<System.DateTime> processed_dt, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="NVarChar(100)")] string comment, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="TinyInt")] System.Nullable<byte> only_processed)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), id, machine_id, status, status_dt, progname, properties, processed, processed_dt, comment, only_processed);
+			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.InsertMStatus")]
+		public int InsertMStatus([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] ref System.Nullable<int> id, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="NVarChar(20)")] string machine_id, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> status, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="DateTime")] System.Nullable<System.DateTime> status_dt, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="NVarChar(50)")] string progname, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="NVarChar(1000)")] string properties, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="TinyInt")] System.Nullable<byte> processed, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="DateTime")] System.Nullable<System.DateTime> processed_dt, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="NVarChar(100)")] string comment)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), id, machine_id, status, status_dt, progname, properties, processed, processed_dt, comment);
+			id = ((System.Nullable<int>)(result.GetParameterValue(0)));
+			return ((int)(result.ReturnValue));
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.SvcParams")]
-	public partial class SvcParam : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _Id;
-		
-		private string _Host;
-		
-		private string _Instance;
-		
-		private string _Name;
-		
-		private string _Value;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIdChanging(int value);
-    partial void OnIdChanged();
-    partial void OnHostChanging(string value);
-    partial void OnHostChanged();
-    partial void OnInstanceChanging(string value);
-    partial void OnInstanceChanged();
-    partial void OnNameChanging(string value);
-    partial void OnNameChanged();
-    partial void OnValueChanging(string value);
-    partial void OnValueChanged();
-    #endregion
-		
-		public SvcParam()
-		{
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int Id
-		{
-			get
-			{
-				return this._Id;
-			}
-			set
-			{
-				if ((this._Id != value))
-				{
-					this.OnIdChanging(value);
-					this.SendPropertyChanging();
-					this._Id = value;
-					this.SendPropertyChanged("Id");
-					this.OnIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Host", DbType="NVarChar(20) NOT NULL", CanBeNull=false)]
-		public string Host
-		{
-			get
-			{
-				return this._Host;
-			}
-			set
-			{
-				if ((this._Host != value))
-				{
-					this.OnHostChanging(value);
-					this.SendPropertyChanging();
-					this._Host = value;
-					this.SendPropertyChanged("Host");
-					this.OnHostChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Instance", DbType="NVarChar(20) NOT NULL", CanBeNull=false)]
-		public string Instance
-		{
-			get
-			{
-				return this._Instance;
-			}
-			set
-			{
-				if ((this._Instance != value))
-				{
-					this.OnInstanceChanging(value);
-					this.SendPropertyChanging();
-					this._Instance = value;
-					this.SendPropertyChanged("Instance");
-					this.OnInstanceChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
-		public string Name
-		{
-			get
-			{
-				return this._Name;
-			}
-			set
-			{
-				if ((this._Name != value))
-				{
-					this.OnNameChanging(value);
-					this.SendPropertyChanging();
-					this._Name = value;
-					this.SendPropertyChanged("Name");
-					this.OnNameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Value", DbType="NVarChar(1000)")]
-		public string Value
-		{
-			get
-			{
-				return this._Value;
-			}
-			set
-			{
-				if ((this._Value != value))
-				{
-					this.OnValueChanging(value);
-					this.SendPropertyChanging();
-					this._Value = value;
-					this.SendPropertyChanged("Value");
-					this.OnValueChanged();
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.m_statuses")]
-	public partial class m_statuse : INotifyPropertyChanging, INotifyPropertyChanged
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.MachineStatuses")]
+	public partial class MachineStatuse : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
@@ -275,7 +131,7 @@ namespace WPF_AIPStressTesting01
 		
 		private System.Data.Linq.Binary _ts;
 		
-		private string _error_msg;
+		private string _comment;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -299,11 +155,11 @@ namespace WPF_AIPStressTesting01
     partial void Onprocessed_dtChanged();
     partial void OntsChanging(System.Data.Linq.Binary value);
     partial void OntsChanged();
-    partial void Onerror_msgChanging(string value);
-    partial void Onerror_msgChanged();
+    partial void OncommentChanging(string value);
+    partial void OncommentChanged();
     #endregion
 		
-		public m_statuse()
+		public MachineStatuse()
 		{
 			OnCreated();
 		}
@@ -488,22 +344,22 @@ namespace WPF_AIPStressTesting01
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_error_msg", DbType="NChar(100)", UpdateCheck=UpdateCheck.Never)]
-		public string error_msg
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_comment", DbType="NVarChar(100)", UpdateCheck=UpdateCheck.Never)]
+		public string comment
 		{
 			get
 			{
-				return this._error_msg;
+				return this._comment;
 			}
 			set
 			{
-				if ((this._error_msg != value))
+				if ((this._comment != value))
 				{
-					this.Onerror_msgChanging(value);
+					this.OncommentChanging(value);
 					this.SendPropertyChanging();
-					this._error_msg = value;
-					this.SendPropertyChanged("error_msg");
-					this.Onerror_msgChanged();
+					this._comment = value;
+					this.SendPropertyChanged("comment");
+					this.OncommentChanged();
 				}
 			}
 		}
@@ -525,6 +381,358 @@ namespace WPF_AIPStressTesting01
 			if ((this.PropertyChanged != null))
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.SvcParams")]
+	public partial class SvcParam : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _Id;
+		
+		private string _Host;
+		
+		private string _Instance;
+		
+		private string _Name;
+		
+		private string _Value;
+		
+		private string _Comment;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnHostChanging(string value);
+    partial void OnHostChanged();
+    partial void OnInstanceChanging(string value);
+    partial void OnInstanceChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnValueChanging(string value);
+    partial void OnValueChanged();
+    partial void OnCommentChanging(string value);
+    partial void OnCommentChanged();
+    #endregion
+		
+		public SvcParam()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Host", DbType="NVarChar(20) NOT NULL", CanBeNull=false)]
+		public string Host
+		{
+			get
+			{
+				return this._Host;
+			}
+			set
+			{
+				if ((this._Host != value))
+				{
+					this.OnHostChanging(value);
+					this.SendPropertyChanging();
+					this._Host = value;
+					this.SendPropertyChanged("Host");
+					this.OnHostChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Instance", DbType="NVarChar(20) NOT NULL", CanBeNull=false)]
+		public string Instance
+		{
+			get
+			{
+				return this._Instance;
+			}
+			set
+			{
+				if ((this._Instance != value))
+				{
+					this.OnInstanceChanging(value);
+					this.SendPropertyChanging();
+					this._Instance = value;
+					this.SendPropertyChanged("Instance");
+					this.OnInstanceChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Value", DbType="NVarChar(1000)")]
+		public string Value
+		{
+			get
+			{
+				return this._Value;
+			}
+			set
+			{
+				if ((this._Value != value))
+				{
+					this.OnValueChanging(value);
+					this.SendPropertyChanging();
+					this._Value = value;
+					this.SendPropertyChanged("Value");
+					this.OnValueChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Comment", DbType="NVarChar(255)")]
+		public string Comment
+		{
+			get
+			{
+				return this._Comment;
+			}
+			set
+			{
+				if ((this._Comment != value))
+				{
+					this.OnCommentChanging(value);
+					this.SendPropertyChanging();
+					this._Comment = value;
+					this.SendPropertyChanged("Comment");
+					this.OnCommentChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	public partial class GetUnprocessedMStatusesResult
+	{
+		
+		private int _id;
+		
+		private string _machine_id;
+		
+		private int _status;
+		
+		private System.DateTime _status_dt;
+		
+		private string _progname;
+		
+		private string _properties;
+		
+		private byte _processed;
+		
+		private System.Nullable<System.DateTime> _processed_dt;
+		
+		private string _comment;
+		
+		public GetUnprocessedMStatusesResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="Int NOT NULL")]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this._id = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_machine_id", DbType="NVarChar(20) NOT NULL", CanBeNull=false)]
+		public string machine_id
+		{
+			get
+			{
+				return this._machine_id;
+			}
+			set
+			{
+				if ((this._machine_id != value))
+				{
+					this._machine_id = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_status", DbType="Int NOT NULL")]
+		public int status
+		{
+			get
+			{
+				return this._status;
+			}
+			set
+			{
+				if ((this._status != value))
+				{
+					this._status = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_status_dt", DbType="DateTime NOT NULL")]
+		public System.DateTime status_dt
+		{
+			get
+			{
+				return this._status_dt;
+			}
+			set
+			{
+				if ((this._status_dt != value))
+				{
+					this._status_dt = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_progname", DbType="NVarChar(50)")]
+		public string progname
+		{
+			get
+			{
+				return this._progname;
+			}
+			set
+			{
+				if ((this._progname != value))
+				{
+					this._progname = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_properties", DbType="NVarChar(1000)")]
+		public string properties
+		{
+			get
+			{
+				return this._properties;
+			}
+			set
+			{
+				if ((this._properties != value))
+				{
+					this._properties = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_processed", DbType="TinyInt NOT NULL")]
+		public byte processed
+		{
+			get
+			{
+				return this._processed;
+			}
+			set
+			{
+				if ((this._processed != value))
+				{
+					this._processed = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_processed_dt", DbType="DateTime")]
+		public System.Nullable<System.DateTime> processed_dt
+		{
+			get
+			{
+				return this._processed_dt;
+			}
+			set
+			{
+				if ((this._processed_dt != value))
+				{
+					this._processed_dt = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_comment", DbType="NVarChar(100)")]
+		public string comment
+		{
+			get
+			{
+				return this._comment;
+			}
+			set
+			{
+				if ((this._comment != value))
+				{
+					this._comment = value;
+				}
 			}
 		}
 	}
